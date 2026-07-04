@@ -1,0 +1,70 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const sections = [
+  {
+    title: "1. Acceptance of terms",
+    body: "By creating an account or using Helper Jobs, you agree to these Terms & Conditions. If you don't agree, please don't use the platform.",
+  },
+  {
+    title: "2. What Helper Jobs is",
+    body: "Helper Jobs is a marketplace that connects people offering daily-wage and household work (\"job givers\") with people looking to do that work (\"job seekers\"). We provide the platform for discovery, applications, and communication — we are not a party to, and do not guarantee the terms of, any agreement made between a job giver and a job seeker.",
+  },
+  {
+    title: "3. Accounts",
+    body: "You're responsible for keeping your account credentials secure and for all activity under your account. You must provide accurate information when creating a profile or posting a job.",
+  },
+  {
+    title: "4. Free for job seekers",
+    body: "Creating a worker profile, browsing jobs, and applying to jobs is, and will always be, free. We will never charge a job seeker to access work.",
+  },
+  {
+    title: "5. Verification levels",
+    body: "Verification levels (Unverified, Phone Verified, ID Verified) reflect the information a user has confirmed with us. They are a trust signal, not a guarantee of conduct, and Helper Jobs is not liable for the actions of any verified or unverified user.",
+  },
+  {
+    title: "6. Prohibited conduct",
+    body: "You may not use Helper Jobs to post fraudulent listings, charge job seekers any fee to apply or be hired, harass or discriminate against other users, or misrepresent your identity or qualifications. Accounts found doing so may be suspended or removed.",
+  },
+  {
+    title: "7. Payments between users",
+    body: "Helper Jobs does not process payments between job givers and job seekers. Any pay arrangement is made directly between the two parties, and Helper Jobs is not responsible for disputes over payment.",
+  },
+  {
+    title: "8. Limitation of liability",
+    body: "Helper Jobs is provided \"as is.\" We do our best to keep the platform safe and reliable, but we are not liable for any loss, damage, or dispute arising from interactions or agreements between users.",
+  },
+  {
+    title: "9. Changes to these terms",
+    body: "We may update these terms from time to time. Continued use of Helper Jobs after changes are posted means you accept the updated terms.",
+  },
+];
+---
+
+<BaseLayout title="Terms & Conditions" description="The terms governing your use of Helper Jobs.">
+  <section class="mx-auto max-w-[720px] px-4 py-16 md:px-6 md:py-24">
+    <h1 class="text-display-lg text-ink">Terms & Conditions</h1>
+    <p class="mt-3 text-body-sm text-mute">Effective date: July 2026</p>
+    <p class="mt-4 text-body-md text-body">
+      These terms govern your use of Helper Jobs. Please read them alongside our
+      <a href="/privacy" class="text-link hover:underline">Privacy Policy</a>.
+    </p>
+
+    <div class="mt-10 flex flex-col gap-8">
+      {sections.map((section) => (
+        <div>
+          <h2 class="text-display-sm text-ink">{section.title}</h2>
+          <p class="mt-2 text-body-md text-body">{section.body}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-10 rounded-md border border-hairline bg-canvas-soft p-6">
+      <p class="text-body-md-strong text-ink">Questions about these terms?</p>
+      <p class="mt-1 text-body-sm text-body">
+        Reach us at <a href="mailto:hello@helperjobshub.com" class="text-link hover:underline">hello@helperjobshub.com</a> or
+        via the <a href="/contact" class="text-link hover:underline">Contact page</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

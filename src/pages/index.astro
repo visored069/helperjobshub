@@ -38,9 +38,96 @@ const differentiators = [
   { icon: Zap, title: "\"Available now\", not just \"applied\"", body: "Workers can signal they're ready to start today, so urgent jobs get filled fast — something classifieds can't do." },
   { icon: IndianRupee, title: "Transparent local wages", body: "Typical pay ranges are shown at posting and browsing time, so nobody has to guess — or get lowballed." },
 ];
+
+const faqs = [
+  {
+    q: "Is Helper Jobs free to use?",
+    a: "Yes, and it always will be for job seekers — creating a profile, browsing jobs, and applying never costs anything. Job givers can post listings for free as well.",
+  },
+  {
+    q: "What kind of jobs can I find or post on Helper Jobs?",
+    a: "Helper Jobs focuses on daily-wage and household work: maids and housekeeping, cooks, drivers, electricians, plumbers, security guards, delivery, construction labour, babysitting and elder care, gardening, painting, and carpentry.",
+  },
+  {
+    q: "How does verification work?",
+    a: "Every profile shows one of three levels — Unverified, Phone Verified, or ID Verified — so the other side can see exactly how much has been confirmed before ever sharing contact details.",
+  },
+  {
+    q: "Do I need a resume to apply for a job?",
+    a: "No. Instead of a resume, workers build a profile around their skills, years of experience, and availability. Applying to a job is a single tap, not a form to fill out every time.",
+  },
+  {
+    q: "How does payment work between the job giver and the worker?",
+    a: "Helper Jobs is a marketplace for finding and hiring — it doesn't process payments. Pay is agreed and exchanged directly between the job giver and the worker, the same way it would be offline.",
+  },
+  {
+    q: "Can one account both hire and look for work?",
+    a: "Yes. A single account can switch between the Job Finder and Job Giver roles at any time from the Switch Role menu, so someone hiring a cook this month can also list themselves as available for driving work next month.",
+  },
+  {
+    q: "How are workers and job givers rated?",
+    a: "Ratings go both ways after a job is completed, so a worker's reliability and a job giver's fairness both show up on their profile — not just a one-sided review system.",
+  },
+  {
+    q: "What does \"Available now\" mean?",
+    a: "It's a toggle on a worker's profile signalling they're ready to start immediately. Job givers with urgent needs — a driver needed today, a last-minute event — can find and contact available workers faster.",
+  },
+  {
+    q: "Is my contact information visible to everyone?",
+    a: "No. Your profile shows your skills, experience, verification level, and rating, but direct contact details are only shared once a job giver and worker choose to move forward after an application.",
+  },
+  {
+    q: "What happens after I apply to a job?",
+    a: "Your application appears in the job giver's applicant list along with your verification level and rating. You can track its status — applied, viewed, shortlisted, hired, or declined — from your Applications page at any time.",
+  },
+  {
+    q: "How do I report a problem or unsafe behaviour?",
+    a: "Every profile and listing has a report option, and safety-related reports are prioritized. See the Safety & trust page for the full rundown of verification, red flags, and how reports are handled.",
+  },
+];
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Helper Jobs — Daily-Wage & Household Job Marketplace",
+  url: "https://helperjobshub.com/",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Any (Web-based)",
+  description:
+    "A free marketplace connecting households and small businesses with verified daily-wage workers — maids, cooks, drivers, electricians, plumbers, and more. Free for job seekers, always.",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "INR",
+  },
+  featureList: [
+    "Verified worker profiles with phone and ID verification levels",
+    "No-resume job applications for daily-wage work",
+    "Job posting for households and small businesses",
+    "Two-way ratings after every job",
+    "Available-now status for urgent hiring",
+  ],
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: f.a,
+    },
+  })),
+};
 ---
 
-<BaseLayout title="Find trusted help or honest work">
+<BaseLayout
+  title="Find trusted help or honest work"
+  description="Helper Jobs connects households and small businesses with verified daily-wage workers — maids, cooks, drivers, electricians, and more. No resumes, no fees for job seekers."
+  schema={[webAppSchema, faqSchema]}
+>
   <!-- Hero -->
   <section class="relative overflow-hidden px-4 pb-24 pt-20 md:px-6 md:pb-32 md:pt-28">
     <div class="mesh-gradient pointer-events-none absolute inset-x-0 top-0 h-[520px] opacity-30"></div>
@@ -158,6 +245,108 @@ const differentiators = [
           <p class="mt-2 text-body-md text-body">Create a free profile, mark yourself available, and start applying — always free.</p>
           <Button href="/signup" variant="secondary" class="mt-6">Find work</Button>
         </Card>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEO content: about the platform -->
+  <section class="bg-canvas-soft px-4 py-16 md:px-6 md:py-24">
+    <div class="mx-auto max-w-[720px]">
+      <p class="text-center font-mono text-caption uppercase tracking-wide text-mute">About the platform</p>
+      <h2 class="mt-3 text-center text-display-lg text-ink">A daily-wage job platform built the right way</h2>
+
+      <div class="mt-8 flex flex-col gap-5 text-body-md text-body">
+        <p>
+          Helper Jobs is a free marketplace built specifically for <strong class="text-ink">daily wage jobs</strong> and
+          <strong class="text-ink">household help</strong> — the kind of work that classifieds-style listings handle
+          badly and corporate job boards ignore entirely. Whether you're looking to <strong class="text-ink">hire
+          domestic help</strong> for your home or you're trying to <strong class="text-ink">find work near me</strong> as
+          a daily-wage worker, the platform is built around how this work actually gets found and offered, not
+          around resumes and cover letters.
+        </p>
+        <p>
+          For households and small businesses, Helper Jobs makes it simple to post a <strong class="text-ink">maid
+          job</strong>, <strong class="text-ink">cook job</strong>, <strong class="text-ink">driver job</strong>,
+          <strong class="text-ink">electrician job</strong>, or <strong class="text-ink">plumber job</strong> in
+          under a minute. You choose the pay type — hourly, daily, fixed, or monthly — set the amount, and mark
+          whether the work is a one-time job, a recurring arrangement, or full-time, ongoing work. Every listing
+          shows the typical local wage range for that category so pay is fair and transparent from the first
+          click, and every applicant arrives with a real verification level attached — so you know whether you're
+          looking at an <strong class="text-ink">unverified</strong>, phone-verified, or fully
+          <strong class="text-ink">ID-verified helper</strong> before you ever share your number or your address.
+          You can mark a listing as urgent to signal it needs to be filled fast, or restrict it to verified workers
+          only if the job involves entering your home or handling money.
+        </p>
+        <p>
+          For job seekers, Helper Jobs is a <strong class="text-ink">job for helper</strong> roles that skips the
+          parts of job hunting that don't apply to daily-wage work. There's no resume to write and no cover letter
+          to draft — just a profile built around real skills, years of experience, and current availability. Browse
+          jobs by category, location, or pay type, or flip on "Available now" so job givers with urgent needs can
+          find you immediately, whether that's a same-day driver, a last-minute event helper, or emergency
+          electrical work. Applying takes one tap, and every application's status — applied, viewed, shortlisted,
+          or hired — is tracked in one place, so there's no wondering whether a job giver ever saw your
+          application. It's free to create a profile, free to browse, and free to apply, with no plan to ever
+          change that — and one account can hold both a worker profile and a job-giver profile at the same time.
+        </p>
+        <p>
+          Trust is the core of how Helper Jobs works, not an afterthought bolted on later. Every profile —
+          worker or job giver — carries one of three verification levels, and two-way ratings after every job mean
+          reliability and fairness show up for both sides, not just in a one-star review system stacked against
+          workers. That combination is what makes this a genuinely <strong class="text-ink">safe hiring
+          platform</strong> for work that, until now, mostly happened through word of mouth, unverified classifieds,
+          or WhatsApp groups with no accountability at all. It's also why Helper Jobs feels different from both
+          ends of the existing market: unlike classifieds, nothing gets posted without a real profile behind it,
+          and unlike a corporate job board built for office resumes, nothing here assumes you have — or need — one.
+        </p>
+        <p>
+          Helper Jobs currently covers housekeeping and maid work, cooking, driving, electrical and plumbing work,
+          security guard roles, delivery, construction labour, babysitting and elder care, gardening, painting, and
+          carpentry — with more categories added as the platform grows. A household might use it to find a reliable
+          cook for weekday evenings or a maid for daily housekeeping; a small business might use it to hire a
+          delivery worker, a security guard, or contract an electrician or plumber for a single visit. Whatever
+          side of the hire you're on, Helper Jobs gives you a faster, fairer, and more transparent way to connect:
+          post a job or build a profile, and see verified matches within minutes.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="px-4 py-16 md:px-6 md:py-24">
+    <div class="mx-auto max-w-[1100px]">
+      <p class="text-center font-mono text-caption uppercase tracking-wide text-mute">FAQ</p>
+      <h2 class="mt-3 text-center text-display-lg text-ink">Common questions</h2>
+      <p class="mx-auto mt-3 max-w-[560px] text-center text-body-md text-body">
+        Everything people ask before hiring help or applying for daily-wage work on Helper Jobs.
+      </p>
+
+      <div class="mt-10 grid gap-4 sm:grid-cols-2">
+        {faqs.map((item) => (
+          <div class="rounded-md border border-hairline bg-canvas p-5">
+            <h3 class="text-body-md-strong text-ink">{item.q}</h3>
+            <p class="mt-2 text-body-sm text-body">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Company -->
+  <section class="bg-canvas-soft px-4 py-16 md:px-6 md:py-24">
+    <div class="mx-auto max-w-[1400px]">
+      <h2 class="text-center text-display-lg text-ink">Get to know Helper Jobs</h2>
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { href: "/about", title: "About us", body: "Why we built a verification-first job marketplace." },
+          { href: "/safety", title: "Safety & trust", body: "How verification, ratings, and reporting work." },
+          { href: "/contact", title: "Contact us", body: "Support, feedback, and safety reports." },
+          { href: "/privacy", title: "Privacy policy", body: "How we handle your information." },
+        ].map((item) => (
+          <a href={item.href} class="group rounded-md border border-hairline bg-canvas p-6 transition-colors hover:border-hairline-strong">
+            <h3 class="text-body-md-strong text-ink group-hover:text-link">{item.title}</h3>
+            <p class="mt-1 text-body-sm text-body">{item.body}</p>
+          </a>
+        ))}
       </div>
     </div>
   </section>

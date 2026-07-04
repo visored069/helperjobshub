@@ -1,0 +1,62 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const sections = [
+  {
+    title: "1. Information we collect",
+    body: "When you create an account, we collect your name, email address, and password (stored as a salted hash, never in plain text). If you build a worker or job-giver profile, we also store the skills, experience, availability, bio, and location details you choose to add. Job listings and applications you create are stored to operate the marketplace.",
+  },
+  {
+    title: "2. How we use your information",
+    body: "We use your information to operate Helper Jobs: to authenticate your account, show your profile to the other side of a potential match, let you apply to or post jobs, and track application status. We do not sell your personal information to third parties.",
+  },
+  {
+    title: "3. What other users can see",
+    body: "Job givers can see a worker's profile (skills, experience, verification level, rating, and bio) when that worker applies to their job. Workers can see a job giver's posted listings and, once they apply, the job giver's name. Contact details are only shared once both sides choose to move forward.",
+  },
+  {
+    title: "4. Cookies and sessions",
+    body: "We use a single session cookie to keep you logged in. It is required for the site to function and is not used for advertising or cross-site tracking.",
+  },
+  {
+    title: "5. Data retention",
+    body: "We retain your account and activity data for as long as your account is active. You can request deletion of your account and associated data at any time by contacting us.",
+  },
+  {
+    title: "6. Your choices",
+    body: "You can update or remove information from your profile at any time from your dashboard. To close your account entirely or ask what data we hold about you, contact us using the details below.",
+  },
+  {
+    title: "7. Changes to this policy",
+    body: "If we make material changes to this policy, we'll update this page and adjust the effective date below.",
+  },
+];
+---
+
+<BaseLayout title="Privacy Policy" description="How Helper Jobs collects, uses, and protects your personal information.">
+  <section class="mx-auto max-w-[720px] px-4 py-16 md:px-6 md:py-24">
+    <h1 class="text-display-lg text-ink">Privacy Policy</h1>
+    <p class="mt-3 text-body-sm text-mute">Effective date: July 2026</p>
+    <p class="mt-4 text-body-md text-body">
+      This policy explains what information Helper Jobs collects, how it's used, and what choices you have. By
+      using Helper Jobs, you agree to the practices described here.
+    </p>
+
+    <div class="mt-10 flex flex-col gap-8">
+      {sections.map((section) => (
+        <div>
+          <h2 class="text-display-sm text-ink">{section.title}</h2>
+          <p class="mt-2 text-body-md text-body">{section.body}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-10 rounded-md border border-hairline bg-canvas-soft p-6">
+      <p class="text-body-md-strong text-ink">Questions about your data?</p>
+      <p class="mt-1 text-body-sm text-body">
+        Reach us at <a href="mailto:hello@helperjobshub.com" class="text-link hover:underline">hello@helperjobshub.com</a> or
+        via the <a href="/contact" class="text-link hover:underline">Contact page</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

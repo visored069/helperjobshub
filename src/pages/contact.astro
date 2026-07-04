@@ -1,0 +1,39 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Card from "../components/Card.astro";
+import { Mail, ShieldAlert, MessageCircle } from "lucide-astro";
+---
+
+<BaseLayout title="Contact Us" description="Get in touch with the Helper Jobs team — support, feedback, safety reports, or general questions.">
+  <section class="mx-auto max-w-[720px] px-4 py-16 md:px-6 md:py-24">
+    <h1 class="text-display-lg text-ink">Contact us</h1>
+    <p class="mt-4 text-body-lg text-body">
+      Whether you've hit a bug, have feedback on how Helper Jobs could work better, or need to report a safety
+      concern — we read every message.
+    </p>
+
+    <div class="mt-10 grid gap-4 sm:grid-cols-2">
+      <Card variant="soft">
+        <Mail size={20} class="text-ink" aria-hidden="true" />
+        <p class="mt-3 text-body-md-strong text-ink">General support</p>
+        <p class="mt-1 text-body-sm text-body">Account issues, questions about how the platform works, or general feedback.</p>
+        <a href="mailto:hello@helperjobshub.com" class="mt-3 inline-block text-body-sm text-link hover:underline">hello@helperjobshub.com</a>
+      </Card>
+      <Card variant="soft">
+        <ShieldAlert size={20} class="text-warning-deep" aria-hidden="true" />
+        <p class="mt-3 text-body-md-strong text-ink">Safety & trust reports</p>
+        <p class="mt-1 text-body-sm text-body">Report fraud, harassment, non-payment, or any behaviour that puts someone at risk.</p>
+        <a href="mailto:hello@helperjobshub.com" class="mt-3 inline-block text-body-sm text-link hover:underline">hello@helperjobshub.com</a>
+      </Card>
+    </div>
+
+    <div class="mt-10 flex items-start gap-3 rounded-md bg-canvas-soft p-5">
+      <MessageCircle size={18} class="mt-0.5 shrink-0 text-ink" aria-hidden="true" />
+      <p class="text-body-sm text-body">
+        For anything time-sensitive involving your immediate safety, contact local emergency services first — don't
+        wait on an email response. See our <a href="/safety" class="text-link hover:underline">Safety & trust page</a> for
+        more on how we handle verification and reports.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

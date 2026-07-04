@@ -6,9 +6,24 @@ import "../styles/global.css";
 interface Props {
   title: string;
   description?: string;
+  keywords?: string;
+  /** One or more JSON-LD structured data objects to embed. */
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+  noindex?: boolean;
 }
 
-const { title, description = "Helper Jobs — find trusted daily-wage and household help, or find work near you." } = Astro.props;
+const {
+  title,
+  description = "Helper Jobs — find trusted daily-wage and household help, or find work near you.",
+  keywords = "daily wage jobs, household help, maid job, cook job, driver job, electrician job, plumber job, verified helper, job for helper near me, hire domestic help, find work near me",
+  schema,
+  noindex = false,
+} = Astro.props;
+
+const normalizedPath = Astro.url.pathname.length > 1 ? Astro.url.pathname.replace(/\/$/, "") : Astro.url.pathname;
+const canonicalURL = new URL(normalizedPath, Astro.site);
+const schemaList = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
+const pageTitle = `${title} · Helper Jobs`;
 ---
 
 <!doctype html>
@@ -26,7 +41,28 @@ const { title, description = "Helper Jobs — find trusted daily-wage and househ
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta name="description" content={description} />
-    <title>{title} · Helper Jobs</title>
+    <meta name="keywords" content={keywords} />
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+    <meta name="author" content="Helper Jobs" />
+    <link rel="canonical" href={canonicalURL} />
+    <title>{pageTitle}</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="Helper Jobs" />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+
+    {schemaList.map((item) => (
+      <script type="application/ld+json" set:html={JSON.stringify(item)} is:inline />
+    ))}
   </head>
   <body class="min-h-screen flex flex-col">
     <a href="#main" class="focus-ring sr-only rounded-sm bg-ink px-4 py-2 text-body-sm-strong text-on-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100]">

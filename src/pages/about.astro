@@ -1,0 +1,60 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { ShieldCheck, Heart, IndianRupee, Users } from "lucide-astro";
+
+const values = [
+  { icon: IndianRupee, title: "Always free for job seekers", body: "We will never charge a worker to create a profile, apply to jobs, or appear in search — no matter how the business evolves." },
+  { icon: ShieldCheck, title: "Verification-first", body: "Trust shouldn't be a guess. Every profile shows a real verification level before contact is ever shared." },
+  { icon: Users, title: "Built for daily-wage work", body: "Not a repurposed office job board. Every part of Helper Jobs is designed around how household and daily-wage work actually gets found and hired." },
+  { icon: Heart, title: "Two-way accountability", body: "Ratings go both ways after every job, so reliability and fairness show up on both sides of the hire — not just one." },
+];
+---
+
+<BaseLayout
+  title="About Us"
+  description="Why we built Helper Jobs — a verification-first marketplace connecting households and small businesses with trusted daily-wage workers, always free for job seekers."
+>
+  <section class="mx-auto max-w-[800px] px-4 py-16 md:px-6 md:py-24">
+    <h1 class="text-display-lg text-ink">About Helper Jobs</h1>
+    <p class="mt-4 text-body-lg text-body">
+      Helper Jobs exists to close a gap that most job platforms ignore: the millions of people doing daily-wage
+      and household work — maids, cooks, drivers, electricians, plumbers, security guards, and more — who are
+      poorly served by resume-first job boards and unverified classifieds alike.
+    </p>
+
+    <p class="mt-6 text-body-md text-body">
+      Classifieds-style listings are fast to post but come with no verification and plenty of spam. Corporate job
+      boards are the opposite problem — built around resumes, cover letters, and office roles that simply don't fit
+      how daily-wage work is found, offered, or trusted. Helper Jobs was built specifically for the space in
+      between: a real profile without a resume, real verification without friction, and real pay transparency from
+      the first click.
+    </p>
+
+    <h2 class="mt-14 text-display-sm text-ink">What we stand for</h2>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      {values.map(({ icon: Icon, title, body }) => (
+        <div class="rounded-md border border-hairline bg-canvas p-5">
+          <Icon size={20} class="text-ink" aria-hidden="true" />
+          <p class="mt-3 text-body-md-strong text-ink">{title}</p>
+          <p class="mt-1 text-body-sm text-body">{body}</p>
+        </div>
+      ))}
+    </div>
+
+    <h2 class="mt-14 text-display-sm text-ink">Who it's for</h2>
+    <p class="mt-4 text-body-md text-body">
+      If you're hiring — a household looking for a cook, driver, or maid, or a small business that needs an
+      electrician, plumber, or delivery worker — Helper Jobs gives you verified applicants and clear local pay
+      ranges before you ever share your number. If you're looking for daily-wage work, it gives you a real profile
+      built around your skills and availability, not a resume you don't have, and it's free — always.
+    </p>
+
+    <div class="mt-10 rounded-md border border-hairline bg-canvas-soft p-6">
+      <p class="text-body-md-strong text-ink">Questions or feedback?</p>
+      <p class="mt-1 text-body-sm text-body">
+        We read every message. Reach us on the <a href="/contact" class="text-link hover:underline">Contact page</a>,
+        or see how we handle safety and verification on our <a href="/safety" class="text-link hover:underline">Safety & trust page</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

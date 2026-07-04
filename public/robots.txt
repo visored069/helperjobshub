@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /select-role
+Disallow: /finder/dashboard
+Disallow: /finder/profile
+Disallow: /finder/applications
+Disallow: /giver/dashboard
+Disallow: /giver/profile
+Disallow: /giver/jobs
+
+Sitemap: https://helperjobshub.com/sitemap.xml
