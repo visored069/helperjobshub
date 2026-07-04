@@ -41,48 +41,52 @@ const differentiators = [
 
 const faqs = [
   {
-    q: "Is Helper Jobs free to use?",
-    a: "Yes, and it always will be for job seekers — creating a profile, browsing jobs, and applying never costs anything. Job givers can post listings for free as well.",
+    q: "Where can I find plumbing helper jobs?",
+    a: "Browse open listings on Helper Jobs and filter by the Plumber category and your location. Every plumbing helper job shows the pay type and typical local rate up front, and you can apply in one tap without a resume.",
   },
   {
-    q: "What kind of jobs can I find or post on Helper Jobs?",
-    a: "Helper Jobs focuses on daily-wage and household work: maids and housekeeping, cooks, drivers, electricians, plumbers, security guards, delivery, construction labour, babysitting and elder care, gardening, painting, and carpentry.",
+    q: "What is the best place to find HVAC helper jobs?",
+    a: "Helper Jobs is built for exactly this kind of search — every HVAC helper listing comes from a verified job giver, shows real local pay before you apply, and lets you filter by location so you only see jobs you can actually get to.",
   },
   {
-    q: "How does verification work?",
-    a: "Every profile shows one of three levels — Unverified, Phone Verified, or ID Verified — so the other side can see exactly how much has been confirmed before ever sharing contact details.",
+    q: "How do I apply to driver helper jobs?",
+    a: "Create a free profile with your experience and availability, browse driver helper jobs by location and pay type, and apply with a single tap. You can track your application's status — applied, viewed, shortlisted, or hired — from your dashboard.",
   },
   {
-    q: "Do I need a resume to apply for a job?",
-    a: "No. Instead of a resume, workers build a profile around their skills, years of experience, and availability. Applying to a job is a single tap, not a form to fill out every time.",
+    q: "What are the main duties of a helper?",
+    a: "A helper supports a skilled worker or driver with the hands-on parts of a job — carrying materials, prepping a site or vehicle, basic assembly or cleanup, and following instructions closely while learning the trade on the job.",
   },
   {
-    q: "How does payment work between the job giver and the worker?",
-    a: "Helper Jobs is a marketplace for finding and hiring — it doesn't process payments. Pay is agreed and exchanged directly between the job giver and the worker, the same way it would be offline.",
+    q: "What educational qualification is required?",
+    a: "Most helper jobs don't require a formal qualification. Employers care more about reliability, willingness to learn, and physical readiness for the work than a certificate — which is why Helper Jobs profiles are built around skills and experience, not a resume.",
   },
   {
-    q: "Can one account both hire and look for work?",
-    a: "Yes. A single account can switch between the Job Finder and Job Giver roles at any time from the Switch Role menu, so someone hiring a cook this month can also list themselves as available for driving work next month.",
+    q: "Do I need prior experience to apply?",
+    a: "No. Many helper jobs are entry-level and train on the job. If you do have relevant experience, add it to your profile — some employers do prefer it for specialized trades like HVAC, welding, or machining — but it's rarely a hard requirement.",
   },
   {
-    q: "How are workers and job givers rated?",
-    a: "Ratings go both ways after a job is completed, so a worker's reliability and a job giver's fairness both show up on their profile — not just a one-sided review system.",
+    q: "What skills make a good helper?",
+    a: "Reliability and punctuality top the list, followed by physical stamina, basic safety awareness, a willingness to take direction, and the ability to stay useful across several small tasks in a single shift.",
   },
   {
-    q: "What does \"Available now\" mean?",
-    a: "It's a toggle on a worker's profile signalling they're ready to start immediately. Job givers with urgent needs — a driver needed today, a last-minute event — can find and contact available workers faster.",
+    q: "What is the average salary for a helper job?",
+    a: "Pay varies widely by trade, location, and experience, so there's no single average that means much. Instead of guessing, every listing on Helper Jobs shows the actual pay type and amount the job giver has set before you apply.",
   },
   {
-    q: "Is my contact information visible to everyone?",
-    a: "No. Your profile shows your skills, experience, verification level, and rating, but direct contact details are only shared once a job giver and worker choose to move forward after an application.",
+    q: "What are the typical working hours for helper jobs?",
+    a: "It depends on the role — some helper jobs are one-time or short shifts, others are recurring or full-time. Job givers set this explicitly on Helper Jobs (one-time, recurring, or full-time), so you know the schedule before applying.",
   },
   {
-    q: "What happens after I apply to a job?",
-    a: "Your application appears in the job giver's applicant list along with your verification level and rating. You can track its status — applied, viewed, shortlisted, hired, or declined — from your Applications page at any time.",
+    q: "How do I answer \"Tell me about yourself\" in a helper job interview?",
+    a: "Keep it short and relevant: your current situation, any hands-on or trade-adjacent experience you have, and why you're reliable and ready to start. Tie it back to the specific role — a warehouse, driving, or trade helper job — rather than a general life story.",
   },
   {
-    q: "How do I report a problem or unsafe behaviour?",
-    a: "Every profile and listing has a report option, and safety-related reports are prioritized. See the Safety & trust page for the full rundown of verification, red flags, and how reports are handled.",
+    q: "Why do employers ask about handling multiple tasks?",
+    a: "Helper roles rarely involve one task at a time — you might be prepping materials, cleaning up, and assisting the lead worker within the same hour. Employers ask this to gauge whether you can keep up with that pace without needing constant direction.",
+  },
+  {
+    q: "How do I prepare for safety questions in an interview?",
+    a: "Be ready to talk about basic PPE (gloves, boots, eye protection) for the trade you're applying to, following posted safety procedures, and reporting hazards or unsafe equipment immediately rather than working around them.",
   },
 ];
 
@@ -124,8 +128,9 @@ const faqSchema = {
 ---
 
 <BaseLayout
-  title="Find trusted help or honest work"
-  description="Helper Jobs connects households and small businesses with verified daily-wage workers — maids, cooks, drivers, electricians, and more. No resumes, no fees for job seekers."
+  title="Helper Jobs Near Me — HVAC, Electrician, Driver & Warehouse Helper Jobs"
+  description="Find helper jobs near you — HVAC helper, electrician helper, driver helper, plumber helper, welder helper, pipefitter helper, warehouse helper, and more. Verified employers, transparent pay, no resume needed."
+  keywords="helper jobs, helper jobs near me, hvac helper jobs, hvac helper jobs near me, electrician helper jobs, electrician helper jobs near me, driver helper jobs, driver helper jobs near me, plumber helper jobs, welder helper jobs, electrical helper jobs, electrical helper jobs near me, full time construction helper jobs, full time warehouse helper jobs, camp kitchen helper jobs, pipefitter helper jobs, repair helper jobs, ups driver helper jobs, manual machinist helper jobs"
   schema={[webAppSchema, faqSchema]}
 >
   <!-- Hero -->
@@ -253,60 +258,23 @@ const faqSchema = {
   <section class="bg-canvas-soft px-4 py-16 md:px-6 md:py-24">
     <div class="mx-auto max-w-[720px]">
       <p class="text-center font-mono text-caption uppercase tracking-wide text-mute">About the platform</p>
-      <h2 class="mt-3 text-center text-display-lg text-ink">A daily-wage job platform built the right way</h2>
+      <h2 class="mt-3 text-center text-display-lg text-ink">Find helper jobs near you, verified from the first click</h2>
 
       <div class="mt-8 flex flex-col gap-5 text-body-md text-body">
+        <p>Helper Jobs is a free marketplace built around one simple idea: finding real <strong class="text-ink">helper jobs</strong> shouldn't mean scrolling unverified classifieds or submitting a resume for work that never needed one. Whether you're searching for <strong class="text-ink">helper jobs near me</strong> in the trades, on the road, or in a warehouse, the platform is built around how this kind of work actually gets found, posted, and filled — fast, local, and with real verification behind every profile.</p>
+        <p>For the skilled trades, Helper Jobs covers the full range of assistant and support roles that keep a job site running: <strong class="text-ink">hvac helper jobs</strong>, <strong class="text-ink">electrician helper jobs</strong>, <strong class="text-ink">plumber helper jobs</strong>, <strong class="text-ink">pipefitter helper jobs</strong>, and general <strong class="text-ink">electrical helper jobs</strong> and <strong class="text-ink">repair helper jobs</strong> all get posted the same way — a clear description, a transparent local pay range, and a real verification level on every applicant. A licensed electrician looking to fill <strong class="text-ink">electrician helper jobs near me</strong> or a contractor searching for <strong class="text-ink">hvac helper jobs near me</strong> can post a listing in under a minute and start reviewing verified applicants the same day, instead of relying on word of mouth or an unverified classifieds post.</p>
+        <p>Driving and delivery work is covered just as directly. <strong class="text-ink">Driver helper jobs</strong> — including <strong class="text-ink">ups driver helper jobs</strong> and other route-assistant roles — get posted with the pay type, schedule, and location spelled out up front, so anyone searching <strong class="text-ink">driver helper jobs near me</strong> can filter straight to what actually fits their area and availability instead of digging through irrelevant listings. The same goes for skilled production roles like <strong class="text-ink">manual machinist helper jobs</strong> and <strong class="text-ink">welder helper jobs</strong>, where experience level and pay expectations matter as much as location.</p>
+        <p>Helper Jobs also handles the ongoing, full-time side of helper work — <strong class="text-ink">full time construction helper jobs</strong>, <strong class="text-ink">full time warehouse helper jobs</strong>, and <strong class="text-ink">camp kitchen helper jobs</strong> can all be posted as recurring or full-time positions rather than one-off gigs, with the frequency and pay structure set clearly at posting time. A construction site or warehouse operation that needs a dependable full-time helper gets the same verification and rating system as a single day's work — reliability shows up on a profile either way.</p>
         <p>
-          Helper Jobs is a free marketplace built specifically for <strong class="text-ink">daily wage jobs</strong> and
-          <strong class="text-ink">household help</strong> — the kind of work that classifieds-style listings handle
-          badly and corporate job boards ignore entirely. Whether you're looking to <strong class="text-ink">hire
-          domestic help</strong> for your home or you're trying to <strong class="text-ink">find work near me</strong> as
-          a daily-wage worker, the platform is built around how this work actually gets found and offered, not
-          around resumes and cover letters.
+          Posting or applying to a helper job takes the same few steps no matter the trade. Job givers set the
+          category, pay type, and schedule, and can flag a listing as urgent or restrict it to verified applicants
+          only when the work involves tools, vehicles, or client sites. Job seekers build one profile — skills,
+          experience, and current availability — instead of rewriting a resume for every listing, then apply with
+          a single tap and track exactly where each application stands: applied, viewed, shortlisted, or hired.
+          That's a meaningfully faster loop than a classifieds post that disappears into a feed, or a corporate job
+          board that assumes a formal work history most helper roles simply don't require.
         </p>
-        <p>
-          For households and small businesses, Helper Jobs makes it simple to post a <strong class="text-ink">maid
-          job</strong>, <strong class="text-ink">cook job</strong>, <strong class="text-ink">driver job</strong>,
-          <strong class="text-ink">electrician job</strong>, or <strong class="text-ink">plumber job</strong> in
-          under a minute. You choose the pay type — hourly, daily, fixed, or monthly — set the amount, and mark
-          whether the work is a one-time job, a recurring arrangement, or full-time, ongoing work. Every listing
-          shows the typical local wage range for that category so pay is fair and transparent from the first
-          click, and every applicant arrives with a real verification level attached — so you know whether you're
-          looking at an <strong class="text-ink">unverified</strong>, phone-verified, or fully
-          <strong class="text-ink">ID-verified helper</strong> before you ever share your number or your address.
-          You can mark a listing as urgent to signal it needs to be filled fast, or restrict it to verified workers
-          only if the job involves entering your home or handling money.
-        </p>
-        <p>
-          For job seekers, Helper Jobs is a <strong class="text-ink">job for helper</strong> roles that skips the
-          parts of job hunting that don't apply to daily-wage work. There's no resume to write and no cover letter
-          to draft — just a profile built around real skills, years of experience, and current availability. Browse
-          jobs by category, location, or pay type, or flip on "Available now" so job givers with urgent needs can
-          find you immediately, whether that's a same-day driver, a last-minute event helper, or emergency
-          electrical work. Applying takes one tap, and every application's status — applied, viewed, shortlisted,
-          or hired — is tracked in one place, so there's no wondering whether a job giver ever saw your
-          application. It's free to create a profile, free to browse, and free to apply, with no plan to ever
-          change that — and one account can hold both a worker profile and a job-giver profile at the same time.
-        </p>
-        <p>
-          Trust is the core of how Helper Jobs works, not an afterthought bolted on later. Every profile —
-          worker or job giver — carries one of three verification levels, and two-way ratings after every job mean
-          reliability and fairness show up for both sides, not just in a one-star review system stacked against
-          workers. That combination is what makes this a genuinely <strong class="text-ink">safe hiring
-          platform</strong> for work that, until now, mostly happened through word of mouth, unverified classifieds,
-          or WhatsApp groups with no accountability at all. It's also why Helper Jobs feels different from both
-          ends of the existing market: unlike classifieds, nothing gets posted without a real profile behind it,
-          and unlike a corporate job board built for office resumes, nothing here assumes you have — or need — one.
-        </p>
-        <p>
-          Helper Jobs currently covers housekeeping and maid work, cooking, driving, electrical and plumbing work,
-          security guard roles, delivery, construction labour, babysitting and elder care, gardening, painting, and
-          carpentry — with more categories added as the platform grows. A household might use it to find a reliable
-          cook for weekday evenings or a maid for daily housekeeping; a small business might use it to hire a
-          delivery worker, a security guard, or contract an electrician or plumber for a single visit. Whatever
-          side of the hire you're on, Helper Jobs gives you a faster, fairer, and more transparent way to connect:
-          post a job or build a profile, and see verified matches within minutes.
-        </p>
+        <p>Every search on Helper Jobs is built around location, so <strong class="text-ink">electrical helper jobs near me</strong> and <strong class="text-ink">helper jobs near me</strong> return listings that are actually reachable, not just relevant by category. And because every profile — worker or job giver — carries a real verification level and picks up two-way ratings after every job, trust builds on the platform itself instead of resetting with every new listing. Whatever kind of helper job you're hiring for or looking for, Helper Jobs gives you a faster, more transparent way to connect: post a job or build a profile, and see verified matches within minutes.</p>
       </div>
     </div>
   </section>
