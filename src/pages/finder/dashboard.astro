@@ -1,0 +1,103 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Card from "../../components/Card.astro";
+---
+
+<BaseLayout title="Your dashboard">
+  <section class="mx-auto max-w-[1400px] px-4 py-12 md:px-6 md:py-16">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <h1 id="greeting" class="text-display-lg text-ink">Welcome back</h1>
+        <p class="mt-1 text-body-md text-body">Here's what's happening with your job search.</p>
+      </div>
+      <label class="flex cursor-pointer items-center gap-3 rounded-md border border-hairline bg-canvas px-4 py-3">
+        <span class="text-body-sm-strong text-ink">Available now</span>
+        <span class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-hairline-strong transition-colors has-[:checked]:bg-ink">
+          <input type="checkbox" id="available-toggle" class="peer sr-only" />
+          <span class="inline-block h-4 w-4 translate-x-1 rounded-full bg-white transition-transform peer-checked:translate-x-6"></span>
+        </span>
+      </label>
+    </div>
+
+    <div class="mt-6 rounded-md border border-hairline bg-canvas p-5">
+      <div class="flex items-center justify-between">
+        <p class="text-body-sm-strong text-ink">Profile completeness</p>
+        <p id="completeness-pct" class="text-body-sm text-body"></p>
+      </div>
+      <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-canvas-soft">
+        <div id="completeness-bar" class="h-full rounded-full bg-ink transition-[width] duration-300"></div>
+      </div>
+      <p class="mt-2 text-body-sm text-body">
+        <a href="/finder/profile" class="text-link hover:underline">Complete your profile</a> to show up in more matches.
+      </p>
+    </div>
+
+    <div class="mt-10 grid gap-8 lg:grid-cols-[2fr_1fr]">
+      <div>
+        <div class="flex items-center justify-between">
+          <h2 class="text-display-sm text-ink">Recommended for you</h2>
+          <a href="/finder/jobs" class="text-body-sm text-link hover:underline">Browse all</a>
+        </div>
+        <div id="recommended-grid" class="mt-4 grid gap-4 sm:grid-cols-2"></div>
+        <p id="recommended-empty" class="hidden mt-4 text-body-sm text-body">
+          Add a few skills to your profile and we'll recommend matching jobs here.
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-6">
+        <Card variant="soft">
+          <h3 class="text-body-md-strong text-ink">Applications</h3>
+          <p id="applications-summary" class="mt-2 text-body-sm text-body"></p>
+          <a href="/finder/applications" class="mt-3 inline-block text-body-sm text-link hover:underline">View all applications</a>
+        </Card>
+        <Card variant="soft">
+          <h3 class="text-body-md-strong text-ink">Saved jobs</h3>
+          <p id="saved-summary" class="mt-2 text-body-sm text-body"></p>
+          <a href="/finder/jobs" class="mt-3 inline-block text-body-sm text-link hover:underline">Browse jobs</a>
+        </Card>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { requireSession, getJobs, getWorkerProfile, saveWorkerProfile, getMyApplications, getSavedJobIds } from "../../lib/store";
+  import { createJobCardElement } from "../../lib/renderJobCard";
+
+  const session = requireSession("finder");
+  if (session) {
+    document.getElementById("greeting")!.textContent = `Welcome back, ${session.name.split(" ")[0]}`;
+
+    const profile = getWorkerProfile();
+    const toggle = document.getElementById("available-toggle") as HTMLInputElement;
+    toggle.checked = profile.availableNow;
+    toggle.addEventListener("change", () => {
+      profile.availableNow = toggle.checked;
+      saveWorkerProfile(profile);
+    });
+
+    const fields = [profile.skills.length > 0, profile.experienceYears > 0 || profile.skills.length > 0, profile.bio.length > 0, profile.availableNow];
+    const pct = Math.round((fields.filter(Boolean).length / fields.length) * 100);
+    document.getElementById("completeness-pct")!.textContent = `${pct}%`;
+    (document.getElementById("completeness-bar") as HTMLDivElement).style.width = `${pct}%`;
+
+    const jobs = getJobs().filter((j) => j.status === "open");
+    const recommended = profile.skills.length > 0 ? jobs.filter((j) => profile.skills.includes(j.categoryId)) : jobs.slice(0, 4);
+    const recommendedGrid = document.getElementById("recommended-grid") as HTMLDivElement;
+    if (recommended.length === 0) {
+      document.getElementById("recommended-empty")!.classList.remove("hidden");
+    } else {
+      for (const job of recommended.slice(0, 4)) {
+        recommendedGrid.appendChild(createJobCardElement(job, { href: `/finder/jobs/view?id=${job.id}`, showSave: false }));
+      }
+    }
+
+    const applications = getMyApplications(session.email);
+    document.getElementById("applications-summary")!.textContent =
+      applications.length === 0 ? "You haven't applied to any jobs yet." : `${applications.length} application${applications.length === 1 ? "" : "s"} in progress.`;
+
+    const savedCount = getSavedJobIds().length;
+    document.getElementById("saved-summary")!.textContent =
+      savedCount === 0 ? "You haven't saved any jobs yet." : `${savedCount} job${savedCount === 1 ? "" : "s"} saved.`;
+  }
+</script>

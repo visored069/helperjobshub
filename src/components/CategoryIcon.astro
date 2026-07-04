@@ -1,0 +1,43 @@
+---
+import {
+  Home,
+  CookingPot,
+  Car,
+  Zap,
+  Wrench,
+  Shield,
+  Package,
+  HardHat,
+  HeartHandshake,
+  Sprout,
+  PaintRoller,
+  Hammer,
+} from "lucide-astro";
+
+interface Props {
+  name: string;
+  size?: number;
+  class?: string;
+}
+
+const { name, size = 20, class: className = "" } = Astro.props;
+
+const iconMap: Record<string, any> = {
+  home: Home,
+  "cooking-pot": CookingPot,
+  car: Car,
+  zap: Zap,
+  wrench: Wrench,
+  shield: Shield,
+  package: Package,
+  "hard-hat": HardHat,
+  "heart-handshake": HeartHandshake,
+  sprout: Sprout,
+  "paint-roller": PaintRoller,
+  hammer: Hammer,
+};
+
+const Icon = iconMap[name] ?? Home;
+---
+
+<Icon size={size} class={className} aria-hidden="true" />

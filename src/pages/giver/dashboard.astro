@@ -1,0 +1,92 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Card from "../../components/Card.astro";
+import Button from "../../components/Button.astro";
+---
+
+<BaseLayout title="Your dashboard">
+  <section class="mx-auto max-w-[1400px] px-4 py-12 md:px-6 md:py-16">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <h1 id="greeting" class="text-display-lg text-ink">Welcome back</h1>
+        <p class="mt-1 text-body-md text-body">Here's an overview of your job listings.</p>
+      </div>
+      <Button href="/giver/post-job" variant="primary">Post a job</Button>
+    </div>
+
+    <div class="mt-8 grid gap-4 sm:grid-cols-3">
+      <Card variant="soft">
+        <p class="text-caption text-mute">Active listings</p>
+        <p id="stat-active" class="mt-1 text-display-md text-ink">0</p>
+      </Card>
+      <Card variant="soft">
+        <p class="text-caption text-mute">Total applicants</p>
+        <p id="stat-applicants" class="mt-1 text-display-md text-ink">0</p>
+      </Card>
+      <Card variant="soft">
+        <p class="text-caption text-mute">Your verification</p>
+        <p id="stat-verification" class="mt-1 text-display-md text-ink">—</p>
+        <a href="/giver/profile" class="mt-1 inline-block text-body-sm text-link hover:underline">Update</a>
+      </Card>
+    </div>
+
+    <div class="mt-10">
+      <div class="flex items-center justify-between">
+        <h2 class="text-display-sm text-ink">Recent listings</h2>
+        <a href="/giver/jobs" class="text-body-sm text-link hover:underline">Manage all listings</a>
+      </div>
+      <div id="recent-list" class="mt-4 flex flex-col gap-3"></div>
+      <p id="recent-empty" class="hidden mt-4 text-body-md text-body">
+        You haven't posted any jobs yet. <a href="/giver/post-job" class="text-link hover:underline">Post your first one</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { requireSession, getJobsPostedBy, getMockApplicantsForJob, getGiverProfile } from "../../lib/store";
+  import { getCategory } from "../../lib/categories";
+
+  const session = requireSession("giver");
+  if (session) {
+    document.getElementById("greeting")!.textContent = `Welcome back, ${session.name.split(" ")[0]}`;
+
+    const jobs = getJobsPostedBy(session.email);
+    const active = jobs.filter((j) => j.status === "open").length;
+    const totalApplicants = jobs.reduce((sum, j) => sum + getMockApplicantsForJob(j.id).length, 0);
+    const profile = getGiverProfile();
+
+    document.getElementById("stat-active")!.textContent = String(active);
+    document.getElementById("stat-applicants")!.textContent = String(totalApplicants);
+    document.getElementById("stat-verification")!.textContent =
+      { unverified: "Unverified", phone: "Phone", id: "ID Verified" }[profile.verification];
+
+    const list = document.getElementById("recent-list") as HTMLDivElement;
+    if (jobs.length === 0) {
+      document.getElementById("recent-empty")!.classList.remove("hidden");
+    } else {
+      for (const job of jobs.slice(0, 5)) {
+        const category = getCategory(job.categoryId);
+        const row = document.createElement("a");
+        row.href = "/giver/jobs";
+        row.className = "flex items-center justify-between gap-3 rounded-md border border-hairline bg-canvas p-4 hover:border-hairline-strong";
+
+        const left = document.createElement("div");
+        const title = document.createElement("p");
+        title.className = "text-body-md-strong text-ink";
+        title.textContent = job.title;
+        const meta = document.createElement("p");
+        meta.className = "text-caption text-mute";
+        meta.textContent = `${category?.label ?? ""} · ${job.location}`;
+        left.append(title, meta);
+
+        const status = document.createElement("span");
+        status.className = "text-caption text-mute";
+        status.textContent = job.status.charAt(0).toUpperCase() + job.status.slice(1);
+
+        row.append(left, status);
+        list.appendChild(row);
+      }
+    }
+  }
+</script>

@@ -1,0 +1,76 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { ShieldCheck, Phone, Shield, Flag, Ban, Eye } from "lucide-astro";
+
+const verificationTiers = [
+  { icon: Shield, title: "Unverified", body: "A new account with just an email. Can browse and message, but is clearly labelled so the other side can decide how much to trust it." },
+  { icon: Phone, title: "Phone Verified", body: "Confirmed a working phone number. A reasonable baseline of trust for casual, low-risk jobs." },
+  { icon: ShieldCheck, title: "ID Verified", body: "Confirmed a government ID. The recommended level for jobs that involve entering someone's home, handling money, or working with children or the elderly." },
+];
+
+const redFlags = [
+  "Never pay money to apply for a job, to \"reserve\" it, or to get training materials — legitimate employers do not charge workers.",
+  "Be cautious of anyone who refuses to share their verification status or won't talk on a phone call before meeting.",
+  "For your first meeting, prefer a public place or a time when others are around, especially for in-home work.",
+  "Don't share your home address, ID numbers, or bank details in chat — only what's needed once you've agreed to work together.",
+  "Trust your instincts. If a listing or message feels off, it's okay to walk away and report it.",
+];
+---
+
+<BaseLayout title="Safety & trust" description="How Helper Jobs verifies people, protects workers, and what to do if something goes wrong.">
+  <section class="mx-auto max-w-[800px] px-4 py-16 md:px-6 md:py-24">
+    <h1 class="text-display-lg text-ink">Safety & trust</h1>
+    <p class="mt-4 text-body-lg text-body">
+      Helper Jobs exists to help people find honest work and reliable help — that only works if the platform is
+      genuinely safe to use. Here's exactly how we approach it, and what to do if something goes wrong.
+    </p>
+
+    <div class="mt-10 rounded-md border border-hairline bg-canvas-soft p-6">
+      <p class="text-body-md-strong text-ink">Free for job seekers, always.</p>
+      <p class="mt-1 text-body-sm text-body">
+        We will never charge a worker to create a profile, apply to jobs, or appear in search. Charging vulnerable
+        workers for access to work is a pattern we're deliberately built against.
+      </p>
+    </div>
+
+    <h2 class="mt-14 text-display-sm text-ink">Verification levels</h2>
+    <p class="mt-2 text-body-md text-body">Every profile shows one of three trust levels, visible before contact is ever shared.</p>
+    <div class="mt-6 grid gap-4 sm:grid-cols-3">
+      {verificationTiers.map(({ icon: Icon, title, body }) => (
+        <div class="rounded-md border border-hairline bg-canvas p-5">
+          <Icon size={20} class="text-ink" aria-hidden="true" />
+          <p class="mt-3 text-body-md-strong text-ink">{title}</p>
+          <p class="mt-1 text-body-sm text-body">{body}</p>
+        </div>
+      ))}
+    </div>
+
+    <h2 class="mt-14 text-display-sm text-ink">Before you meet or hire someone</h2>
+    <ul class="mt-4 flex flex-col gap-3">
+      {redFlags.map((tip) => (
+        <li class="flex items-start gap-3 text-body-md text-body">
+          <Eye size={18} class="mt-0.5 shrink-0 text-warning-deep" aria-hidden="true" />
+          <span>{tip}</span>
+        </li>
+      ))}
+    </ul>
+
+    <h2 class="mt-14 text-display-sm text-ink">Reporting a problem</h2>
+    <div class="mt-4 flex items-start gap-3 rounded-md bg-canvas-soft p-5">
+      <Flag size={18} class="mt-0.5 shrink-0 text-error" aria-hidden="true" />
+      <p class="text-body-md text-body">
+        Every profile and job listing has a report option. Reports involving safety, harassment, or non-payment are
+        prioritized. If you're in immediate danger, contact local emergency services first — do not wait on an
+        in-app report.
+      </p>
+    </div>
+
+    <div class="mt-4 flex items-start gap-3 rounded-md bg-canvas-soft p-5">
+      <Ban size={18} class="mt-0.5 shrink-0 text-error" aria-hidden="true" />
+      <p class="text-body-md text-body">
+        Accounts with verified reports of fraud, harassment, or unsafe behaviour are removed from the platform.
+        Two-way ratings after every job also mean patterns show up quickly on a profile, for both workers and job givers.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

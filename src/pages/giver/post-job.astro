@@ -1,0 +1,96 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Card from "../../components/Card.astro";
+import Input from "../../components/Input.astro";
+import Select from "../../components/Select.astro";
+import Textarea from "../../components/Textarea.astro";
+import Button from "../../components/Button.astro";
+import { categories } from "../../lib/categories";
+
+const payTypeOptions = [
+  { value: "hourly", label: "Hourly" },
+  { value: "daily", label: "Daily" },
+  { value: "fixed", label: "Fixed / one-time" },
+  { value: "monthly", label: "Monthly" },
+];
+
+const frequencyOptions = [
+  { value: "one-time", label: "One-time job" },
+  { value: "recurring", label: "Recurring (few times a week)" },
+  { value: "full-time", label: "Full-time / ongoing" },
+];
+---
+
+<BaseLayout title="Post a job">
+  <section class="mx-auto max-w-[640px] px-4 py-12 md:px-6 md:py-16">
+    <h1 class="text-display-lg text-ink">Post a job</h1>
+    <p class="mt-2 text-body-md text-body">Takes under a minute. Clear, fair listings get filled faster.</p>
+
+    <Card variant="soft" class="mt-8">
+      <form id="post-job-form" class="flex flex-col gap-5">
+        <Input label="Job title" name="title" required placeholder="e.g. Cook needed for evenings" />
+        <Select label="Category" name="categoryId" required options={categories.map((c) => ({ value: c.id, label: c.label }))} placeholder="Choose a category" />
+        <p id="wage-hint" class="hidden -mt-3 text-caption text-mute"></p>
+        <Textarea label="Description" name="description" required placeholder="What does the work involve? Any specific requirements?" />
+        <Input label="Location" name="location" required placeholder="Area, city" />
+        <div class="grid grid-cols-2 gap-4">
+          <Select label="Pay type" name="payType" required options={payTypeOptions} />
+          <Input label="Pay amount" name="payAmount" required placeholder="e.g. ₹500/day" />
+        </div>
+        <Select label="Frequency" name="frequency" required options={frequencyOptions} />
+
+        <label class="flex items-center gap-2">
+          <input type="checkbox" name="urgent" class="h-4 w-4 rounded border-hairline-strong" />
+          <span class="text-body-sm text-ink">This is urgent — needs someone right away</span>
+        </label>
+        <label class="flex items-center gap-2">
+          <input type="checkbox" name="verifiedOnly" class="h-4 w-4 rounded border-hairline-strong" />
+          <span class="text-body-sm text-ink">Only show this to verified workers</span>
+        </label>
+
+        <Button type="submit" variant="primary" class="w-full">Post job</Button>
+      </form>
+    </Card>
+  </section>
+</BaseLayout>
+
+<script>
+  import { requireSession, saveJob } from "../../lib/store";
+  import { getCategory } from "../../lib/categories";
+  import type { Frequency, PayType } from "../../lib/types";
+
+  const session = requireSession("giver");
+  if (session) {
+    const form = document.getElementById("post-job-form") as HTMLFormElement;
+    const categorySelect = form.elements.namedItem("categoryId") as HTMLSelectElement;
+    const wageHint = document.getElementById("wage-hint") as HTMLParagraphElement;
+
+    categorySelect.addEventListener("change", () => {
+      const category = getCategory(categorySelect.value);
+      if (category) {
+        wageHint.textContent = `Typical local rate: ${category.wageRange}`;
+        wageHint.classList.remove("hidden");
+      } else {
+        wageHint.classList.add("hidden");
+      }
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const job = saveJob({
+        title: String(data.get("title") ?? ""),
+        categoryId: String(data.get("categoryId") ?? ""),
+        description: String(data.get("description") ?? ""),
+        location: String(data.get("location") ?? ""),
+        payType: data.get("payType") as PayType,
+        payAmount: String(data.get("payAmount") ?? ""),
+        frequency: data.get("frequency") as Frequency,
+        urgent: data.get("urgent") === "on",
+        verifiedOnly: data.get("verifiedOnly") === "on",
+        postedBy: session.email,
+      });
+      window.location.href = `/giver/jobs?posted=${job.id}`;
+    });
+  }
+</script>

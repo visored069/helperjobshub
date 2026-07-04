@@ -1,0 +1,51 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Card from "../components/Card.astro";
+import Input from "../components/Input.astro";
+import Button from "../components/Button.astro";
+---
+
+<BaseLayout title="Log in">
+  <section class="mx-auto flex max-w-[480px] flex-col px-4 py-16 md:py-24">
+    <h1 class="text-display-md text-ink">Log in</h1>
+    <p class="mt-2 text-body-md text-body">Welcome back. This is a prototype login — your data stays on this device.</p>
+
+    <Card variant="soft" class="mt-8">
+      <form id="login-form" class="flex flex-col gap-5">
+        <Input label="Email" name="email" type="email" required placeholder="you@example.com" autocomplete="email" />
+        <Input label="Password" name="password" type="password" required placeholder="••••••••" autocomplete="current-password" />
+        <p id="login-error" class="hidden text-body-sm text-error" role="alert"></p>
+        <Button type="submit" variant="primary" class="w-full">Log in</Button>
+      </form>
+    </Card>
+
+    <p class="mt-6 text-center text-body-sm text-body">
+      New here? <a href="/signup" class="focus-ring text-link hover:underline">Create an account</a>
+    </p>
+  </section>
+</BaseLayout>
+
+<script>
+  import { logIn, getSession } from "../lib/store";
+
+  const form = document.getElementById("login-form") as HTMLFormElement;
+  const errorEl = document.getElementById("login-error") as HTMLParagraphElement;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const email = String(data.get("email") ?? "");
+    const password = String(data.get("password") ?? "");
+
+    const result = logIn(email, password);
+    if (!result.ok) {
+      errorEl.textContent = result.error;
+      errorEl.classList.remove("hidden");
+      (form.elements.namedItem("email") as HTMLInputElement).focus();
+      return;
+    }
+
+    const session = getSession();
+    window.location.href = session?.activeRole ? `/${session.activeRole}/dashboard` : "/select-role";
+  });
+</script>

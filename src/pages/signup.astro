@@ -1,0 +1,60 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Card from "../components/Card.astro";
+import Input from "../components/Input.astro";
+import Button from "../components/Button.astro";
+---
+
+<BaseLayout title="Sign up">
+  <section class="mx-auto flex max-w-[480px] flex-col px-4 py-16 md:py-24">
+    <h1 class="text-display-md text-ink">Create your account</h1>
+    <p class="mt-2 text-body-md text-body">One account works as both a job seeker and a job giver — switch anytime.</p>
+
+    <Card variant="soft" class="mt-8">
+      <form id="signup-form" class="flex flex-col gap-5">
+        <Input label="Full name" name="name" required placeholder="e.g. Priya Sharma" autocomplete="name" />
+        <Input label="Email" name="email" type="email" required placeholder="you@example.com" autocomplete="email" />
+        <Input label="Phone number" name="phone" type="tel" required placeholder="9876543210" autocomplete="tel" />
+        <Input label="Password" name="password" type="password" required placeholder="At least 6 characters" hint="Used only to log back in on this device." autocomplete="new-password" />
+        <p id="signup-error" class="hidden text-body-sm text-error" role="alert"></p>
+        <Button type="submit" variant="primary" class="w-full">Create account</Button>
+      </form>
+    </Card>
+
+    <p class="mt-6 text-center text-body-sm text-body">
+      Already have an account? <a href="/login" class="focus-ring text-link hover:underline">Log in</a>
+    </p>
+  </section>
+</BaseLayout>
+
+<script>
+  import { signUp } from "../lib/store";
+
+  const form = document.getElementById("signup-form") as HTMLFormElement;
+  const errorEl = document.getElementById("signup-error") as HTMLParagraphElement;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const name = String(data.get("name") ?? "");
+    const email = String(data.get("email") ?? "");
+    const password = String(data.get("password") ?? "");
+
+    if (password.length < 6) {
+      errorEl.textContent = "Password must be at least 6 characters.";
+      errorEl.classList.remove("hidden");
+      (form.elements.namedItem("password") as HTMLInputElement).focus();
+      return;
+    }
+
+    const result = signUp(name, email, password);
+    if (!result.ok) {
+      errorEl.textContent = result.error;
+      errorEl.classList.remove("hidden");
+      (form.elements.namedItem("email") as HTMLInputElement).focus();
+      return;
+    }
+
+    window.location.href = "/select-role";
+  });
+</script>

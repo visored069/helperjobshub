@@ -1,0 +1,59 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="My applications">
+  <section class="mx-auto max-w-[900px] px-4 py-12 md:px-6 md:py-16">
+    <h1 class="text-display-lg text-ink">My applications</h1>
+    <p class="mt-2 text-body-md text-body">Track the status of every job you've applied to.</p>
+
+    <div id="applications-list" class="mt-8 flex flex-col gap-3"></div>
+    <p id="applications-empty" class="hidden mt-8 text-body-md text-body">
+      You haven't applied to any jobs yet. <a href="/finder/jobs" class="text-link hover:underline">Browse open jobs</a>.
+    </p>
+  </section>
+</BaseLayout>
+
+<script>
+  import { requireSession, getMyApplications, getJob } from "../../lib/store";
+
+  const session = requireSession("finder");
+  if (session) {
+    const applications = getMyApplications(session.email);
+    const list = document.getElementById("applications-list") as HTMLDivElement;
+
+    if (applications.length === 0) {
+      document.getElementById("applications-empty")!.classList.remove("hidden");
+    } else {
+      const statusTone: Record<string, string> = {
+        applied: "bg-canvas-soft text-body",
+        viewed: "bg-link-bg-soft text-link-deep",
+        shortlisted: "bg-warning-soft text-warning-deep",
+        hired: "bg-cyan-soft text-cyan-deep",
+        closed: "bg-canvas-soft text-mute",
+      };
+      for (const app of applications) {
+        const job = getJob(app.jobId);
+        const row = document.createElement("a");
+        row.href = job ? `/finder/jobs/view?id=${job.id}` : "#";
+        row.className = "flex items-center justify-between gap-4 rounded-md border border-hairline bg-canvas p-4 hover:border-hairline-strong";
+
+        const left = document.createElement("div");
+        const title = document.createElement("p");
+        title.className = "text-body-md-strong text-ink";
+        title.textContent = job?.title ?? "Job no longer available";
+        const meta = document.createElement("p");
+        meta.className = "text-caption text-mute";
+        meta.textContent = `Applied ${app.appliedAt}`;
+        left.append(title, meta);
+
+        const pill = document.createElement("span");
+        pill.className = `shrink-0 rounded-full px-2.5 py-1 text-caption font-medium ${statusTone[app.status]}`;
+        pill.textContent = app.status.charAt(0).toUpperCase() + app.status.slice(1);
+
+        row.append(left, pill);
+        list.appendChild(row);
+      }
+    }
+  }
+</script>

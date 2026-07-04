@@ -1,0 +1,24 @@
+---
+interface Props {
+  status: string;
+  class?: string;
+}
+
+const { status, class: className = "" } = Astro.props;
+
+const config: Record<string, { label: string; tone: string }> = {
+  open: { label: "Open", tone: "bg-link-bg-soft text-link-deep" },
+  filled: { label: "Filled", tone: "bg-canvas-soft text-body" },
+  closed: { label: "Closed", tone: "bg-canvas-soft text-mute" },
+  applied: { label: "Applied", tone: "bg-canvas-soft text-body" },
+  viewed: { label: "Viewed", tone: "bg-link-bg-soft text-link-deep" },
+  shortlisted: { label: "Shortlisted", tone: "bg-warning-soft text-warning-deep" },
+  hired: { label: "Hired", tone: "bg-cyan-soft text-cyan-deep" },
+};
+
+const { label, tone } = config[status] ?? { label: status, tone: "bg-canvas-soft text-body" };
+---
+
+<span class={`inline-flex items-center rounded-full px-2.5 py-1 text-caption font-medium ${tone} ${className}`}>
+  {label}
+</span>

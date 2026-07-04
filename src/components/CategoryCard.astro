@@ -1,0 +1,23 @@
+---
+import CategoryIcon from "./CategoryIcon.astro";
+import type { Category } from "../lib/types";
+
+interface Props {
+  category: Category;
+  href?: string;
+}
+
+const { category, href } = Astro.props;
+const Tag = href ? "a" : "div";
+---
+
+<Tag
+  href={href}
+  class="focus-ring group flex flex-col items-center gap-3 rounded-md border border-hairline bg-canvas p-5 text-center transition-colors hover:border-hairline-strong hover:bg-canvas-soft-2"
+>
+  <span class="grid h-12 w-12 place-items-center rounded-full bg-canvas-soft text-ink group-hover:bg-canvas">
+    <CategoryIcon name={category.icon} size={22} />
+  </span>
+  <span class="text-body-sm-strong text-ink">{category.label}</span>
+  <span class="text-caption text-mute">{category.wageRange}</span>
+</Tag>

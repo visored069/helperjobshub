@@ -1,0 +1,89 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Select from "../../../components/Select.astro";
+import Input from "../../../components/Input.astro";
+import { categories } from "../../../lib/categories";
+
+const payTypeOptions = [
+  { value: "hourly", label: "Hourly" },
+  { value: "daily", label: "Daily" },
+  { value: "fixed", label: "Fixed / one-time" },
+  { value: "monthly", label: "Monthly" },
+];
+---
+
+<BaseLayout title="Browse jobs">
+  <section class="mx-auto max-w-[1400px] px-4 py-12 md:px-6 md:py-16">
+    <h1 class="text-display-lg text-ink">Browse jobs</h1>
+    <p class="mt-2 text-body-md text-body">Filter by category, location, or pay type. All wages are shown up front.</p>
+
+    <form id="filter-form" class="mt-8 grid gap-4 rounded-md border border-hairline bg-canvas p-5 sm:grid-cols-2 lg:grid-cols-4">
+      <Select label="Category" name="category" options={categories.map((c) => ({ value: c.id, label: c.label }))} placeholder="All categories" />
+      <Input label="Location" name="location" placeholder="City or area" />
+      <Select label="Pay type" name="payType" options={payTypeOptions} placeholder="Any pay type" />
+      <label class="flex flex-col gap-1.5">
+        <span class="text-body-sm-strong text-ink">&nbsp;</span>
+        <span class="flex h-12 items-center gap-2">
+          <input type="checkbox" id="field-verifiedOnly" name="verifiedOnly" class="focus-ring h-4 w-4 rounded border-hairline-strong" />
+          <label for="field-verifiedOnly" class="text-body-sm text-body">Verified-only jobs</label>
+        </span>
+      </label>
+    </form>
+
+    <p id="results-count" class="mt-6 text-body-sm text-body"></p>
+    <div id="jobs-grid" class="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+    <p id="empty-state" class="hidden mt-6 text-body-md text-body">No jobs match your filters yet. Try widening your search.</p>
+  </section>
+</BaseLayout>
+
+<script>
+  import { getJobs } from "../../../lib/store";
+  import { createJobCardElement } from "../../../lib/renderJobCard";
+
+  const grid = document.getElementById("jobs-grid") as HTMLDivElement;
+  const emptyState = document.getElementById("empty-state") as HTMLParagraphElement;
+  const resultsCount = document.getElementById("results-count") as HTMLParagraphElement;
+  const form = document.getElementById("filter-form") as HTMLFormElement;
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("category")) (form.elements.namedItem("category") as HTMLSelectElement).value = params.get("category")!;
+  if (params.get("location")) (form.elements.namedItem("location") as HTMLInputElement).value = params.get("location")!;
+  if (params.get("payType")) (form.elements.namedItem("payType") as HTMLSelectElement).value = params.get("payType")!;
+  if (params.get("verifiedOnly")) (form.elements.namedItem("verifiedOnly") as HTMLInputElement).checked = true;
+
+  function render() {
+    const data = new FormData(form);
+    const category = String(data.get("category") ?? "");
+    const location = String(data.get("location") ?? "").trim().toLowerCase();
+    const payType = String(data.get("payType") ?? "");
+    const verifiedOnly = data.get("verifiedOnly") === "on";
+
+    const jobs = getJobs().filter((job) => {
+      if (job.status !== "open") return false;
+      if (category && job.categoryId !== category) return false;
+      if (payType && job.payType !== payType) return false;
+      if (verifiedOnly && !job.verifiedOnly) return false;
+      if (location && !job.location.toLowerCase().includes(location)) return false;
+      return true;
+    });
+
+    grid.innerHTML = "";
+    for (const job of jobs) {
+      grid.appendChild(createJobCardElement(job, { href: `/finder/jobs/view?id=${job.id}` }));
+    }
+    emptyState.classList.toggle("hidden", jobs.length > 0);
+    resultsCount.textContent = `${jobs.length} job${jobs.length === 1 ? "" : "s"} found`;
+
+    const nextParams = new URLSearchParams();
+    if (category) nextParams.set("category", category);
+    if (location) nextParams.set("location", location);
+    if (payType) nextParams.set("payType", payType);
+    if (verifiedOnly) nextParams.set("verifiedOnly", "1");
+    const query = nextParams.toString();
+    history.replaceState(null, "", query ? `?${query}` : window.location.pathname);
+  }
+
+  form.addEventListener("input", render);
+  form.addEventListener("change", render);
+  render();
+</script>

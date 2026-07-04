@@ -1,0 +1,39 @@
+---
+interface Props {
+  href?: string;
+  variant?: "primary" | "secondary" | "primary-sm" | "secondary-sm";
+  type?: "button" | "submit";
+  id?: string;
+  class?: string;
+}
+
+const { href, variant = "primary", type = "button", id, class: className = "" } = Astro.props;
+
+const base = "focus-ring inline-flex items-center justify-center gap-2 rounded-pill font-medium transition-colors whitespace-nowrap";
+const sizes: Record<string, string> = {
+  primary: "h-12 px-6 text-base",
+  secondary: "h-12 px-6 text-base",
+  "primary-sm": "h-9 px-4 text-sm",
+  "secondary-sm": "h-9 px-4 text-sm",
+};
+const tones: Record<string, string> = {
+  primary: "bg-ink text-on-primary hover:bg-neutral-800",
+  secondary: "bg-canvas text-ink border border-hairline hover:bg-canvas-soft-2",
+  "primary-sm": "bg-ink text-on-primary hover:bg-neutral-800",
+  "secondary-sm": "bg-canvas text-ink border border-hairline hover:bg-canvas-soft-2",
+};
+
+const classes = [base, sizes[variant], tones[variant], className].join(" ");
+---
+
+{
+  href ? (
+    <a href={href} id={id} class={classes}>
+      <slot />
+    </a>
+  ) : (
+    <button type={type} id={id} class={classes}>
+      <slot />
+    </button>
+  )
+}

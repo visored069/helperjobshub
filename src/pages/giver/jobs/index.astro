@@ -1,0 +1,107 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Button from "../../../components/Button.astro";
+---
+
+<BaseLayout title="My job listings">
+  <section class="mx-auto max-w-[900px] px-4 py-12 md:px-6 md:py-16">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <h1 class="text-display-lg text-ink">My job listings</h1>
+        <p class="mt-2 text-body-md text-body">Manage the jobs you've posted and see who's applied.</p>
+      </div>
+      <Button href="/giver/post-job" variant="primary">Post a job</Button>
+    </div>
+
+    <div id="jobs-list" class="mt-8 flex flex-col gap-3"></div>
+    <p id="jobs-empty" class="hidden mt-8 text-body-md text-body">You haven't posted any jobs yet.</p>
+  </section>
+</BaseLayout>
+
+<script>
+  import { requireSession, getJobsPostedBy, updateJobStatus, getMockApplicantsForJob } from "../../../lib/store";
+  import { getCategory } from "../../../lib/categories";
+
+  const session = requireSession("giver");
+  if (session) {
+    const list = document.getElementById("jobs-list") as HTMLDivElement;
+
+    function render() {
+      const jobs = getJobsPostedBy(session!.email);
+      list.innerHTML = "";
+      if (jobs.length === 0) {
+        document.getElementById("jobs-empty")!.classList.remove("hidden");
+        return;
+      }
+      document.getElementById("jobs-empty")!.classList.add("hidden");
+
+      const statusTone: Record<string, string> = {
+        open: "bg-link-bg-soft text-link-deep",
+        filled: "bg-canvas-soft text-body",
+        closed: "bg-canvas-soft text-mute",
+      };
+
+      for (const job of jobs) {
+        const category = getCategory(job.categoryId);
+        const applicantCount = getMockApplicantsForJob(job.id).length;
+
+        const row = document.createElement("div");
+        row.className = "rounded-md border border-hairline bg-canvas p-5";
+
+        const top = document.createElement("div");
+        top.className = "flex flex-wrap items-start justify-between gap-3";
+
+        const left = document.createElement("div");
+        const title = document.createElement("p");
+        title.className = "text-body-md-strong text-ink";
+        title.textContent = job.title;
+        const meta = document.createElement("p");
+        meta.className = "text-caption text-mute";
+        meta.textContent = `${category?.label ?? ""} · ${job.location} · Posted ${job.postedAt}`;
+        left.append(title, meta);
+
+        const pill = document.createElement("span");
+        pill.className = `shrink-0 rounded-full px-2.5 py-1 text-caption font-medium ${statusTone[job.status]}`;
+        pill.textContent = job.status.charAt(0).toUpperCase() + job.status.slice(1);
+
+        top.append(left, pill);
+
+        const bottom = document.createElement("div");
+        bottom.className = "mt-4 flex flex-wrap items-center gap-3 border-t border-hairline pt-4";
+
+        const applicantsLink = document.createElement("a");
+        applicantsLink.href = `/giver/jobs/applicants?id=${job.id}`;
+        applicantsLink.className = "focus-ring text-body-sm text-link hover:underline";
+        applicantsLink.textContent = `${applicantCount} applicant${applicantCount === 1 ? "" : "s"}`;
+        bottom.appendChild(applicantsLink);
+
+        if (job.status !== "closed") {
+          const closeBtn = document.createElement("button");
+          closeBtn.type = "button";
+          closeBtn.className = "focus-ring ml-auto rounded-sm border border-hairline px-3 py-1.5 text-body-sm text-ink hover:bg-canvas-soft-2";
+          closeBtn.textContent = job.status === "open" ? "Mark filled" : "Close listing";
+          closeBtn.addEventListener("click", () => {
+            updateJobStatus(job.id, job.status === "open" ? "filled" : "closed");
+            render();
+          });
+          bottom.appendChild(closeBtn);
+        } else {
+          const reopenBtn = document.createElement("button");
+          reopenBtn.type = "button";
+          reopenBtn.className = "focus-ring ml-auto rounded-sm border border-hairline px-3 py-1.5 text-body-sm text-ink hover:bg-canvas-soft-2";
+          reopenBtn.textContent = "Reopen";
+          reopenBtn.addEventListener("click", () => {
+            updateJobStatus(job.id, "open");
+            render();
+          });
+          bottom.appendChild(reopenBtn);
+        }
+
+        row.append(top, bottom);
+        list.appendChild(row);
+      }
+    }
+
+    render();
+  }
+</script>

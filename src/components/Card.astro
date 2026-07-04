@@ -1,0 +1,19 @@
+---
+interface Props {
+  variant?: "marketing" | "marketing-lg" | "soft";
+  class?: string;
+  as?: "div" | "article";
+}
+
+const { variant = "marketing", class: className = "", as: Tag = "div" } = Astro.props;
+
+const variants: Record<string, string> = {
+  marketing: "bg-canvas rounded-md p-6 shadow-card",
+  "marketing-lg": "bg-canvas rounded-lg p-8 shadow-card-lg",
+  soft: "bg-canvas-soft rounded-md p-6",
+};
+---
+
+<Tag class={`${variants[variant]} ${className}`}>
+  <slot />
+</Tag>

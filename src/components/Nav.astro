@@ -1,0 +1,99 @@
+---
+import { Menu, X } from "lucide-astro";
+---
+
+<header class="sticky top-0 z-50 h-16 border-b border-hairline bg-canvas/95 backdrop-blur">
+  <div class="mx-auto flex h-full max-w-[1400px] items-center justify-between gap-4 px-4 md:px-6">
+    <a href="/" class="focus-ring flex shrink-0 items-center gap-2 rounded-sm">
+      <span class="grid h-7 w-7 place-items-center rounded-sm bg-ink text-sm font-semibold text-on-primary">H</span>
+      <span class="text-body-sm-strong text-ink">Helper Jobs</span>
+    </a>
+
+    <nav class="hidden items-center gap-1 md:flex" aria-label="Primary">
+      <a href="/finder/jobs" class="focus-ring rounded-full px-3 py-1.5 text-body-sm text-body transition-colors hover:bg-canvas-soft-2 hover:text-ink">Browse jobs</a>
+      <a href="/giver/post-job" class="focus-ring rounded-full px-3 py-1.5 text-body-sm text-body transition-colors hover:bg-canvas-soft-2 hover:text-ink">Post a job</a>
+      <a href="/safety" class="focus-ring rounded-full px-3 py-1.5 text-body-sm text-body transition-colors hover:bg-canvas-soft-2 hover:text-ink">Safety</a>
+    </nav>
+
+    <div class="hidden items-center gap-2 md:flex" id="nav-auth-area">
+      <div id="nav-logged-out" class="flex items-center gap-2">
+        <a href="/login" class="focus-ring flex h-7 items-center rounded-sm px-2 text-body-sm-strong text-ink hover:bg-canvas-soft-2">Log in</a>
+        <a href="/signup" class="focus-ring flex h-7 items-center rounded-sm bg-ink px-2 text-body-sm-strong text-on-primary hover:bg-neutral-800">Sign up</a>
+      </div>
+      <div id="nav-logged-in" class="hidden items-center gap-3">
+        <a href="/select-role" class="focus-ring rounded-full px-2 text-body-sm text-body hover:text-ink">Switch role</a>
+        <a href="/finder/dashboard" id="nav-dashboard-link" class="focus-ring flex h-7 items-center rounded-sm border border-hairline px-2 text-body-sm-strong text-ink hover:bg-canvas-soft-2">Dashboard</a>
+        <button type="button" id="nav-logout" class="focus-ring flex h-7 items-center rounded-sm bg-ink px-2 text-body-sm-strong text-on-primary hover:bg-neutral-800">Log out</button>
+      </div>
+    </div>
+
+    <button type="button" id="nav-mobile-toggle" class="focus-ring grid h-9 w-9 place-items-center rounded-sm text-ink md:hidden" aria-label="Open menu" aria-expanded="false" aria-controls="nav-mobile-panel">
+      <Menu size={20} id="nav-menu-icon" aria-hidden="true" />
+      <X size={20} id="nav-close-icon" class="hidden" aria-hidden="true" />
+    </button>
+  </div>
+
+  <div id="nav-mobile-panel" class="hidden flex-col gap-1 border-b border-hairline bg-canvas px-4 py-3 md:hidden">
+    <a href="/finder/jobs" class="rounded-sm px-3 py-2 text-body-sm text-body hover:bg-canvas-soft-2 hover:text-ink">Browse jobs</a>
+    <a href="/giver/post-job" class="rounded-sm px-3 py-2 text-body-sm text-body hover:bg-canvas-soft-2 hover:text-ink">Post a job</a>
+    <a href="/safety" class="rounded-sm px-3 py-2 text-body-sm text-body hover:bg-canvas-soft-2 hover:text-ink">Safety</a>
+    <div class="my-1 border-t border-hairline"></div>
+    <div id="nav-mobile-logged-out" class="flex flex-col gap-2 px-3 py-1">
+      <a href="/login" class="focus-ring flex h-10 items-center justify-center rounded-sm border border-hairline text-body-sm-strong text-ink">Log in</a>
+      <a href="/signup" class="focus-ring flex h-10 items-center justify-center rounded-sm bg-ink text-body-sm-strong text-on-primary">Sign up</a>
+    </div>
+    <div id="nav-mobile-logged-in" class="hidden flex-col gap-2 px-3 py-1">
+      <a href="/select-role" class="rounded-sm px-3 py-2 text-body-sm text-body hover:text-ink">Switch role</a>
+      <a href="/finder/dashboard" id="nav-mobile-dashboard-link" class="focus-ring flex h-10 items-center justify-center rounded-sm border border-hairline text-body-sm-strong text-ink">Dashboard</a>
+      <button type="button" id="nav-mobile-logout" class="focus-ring flex h-10 items-center justify-center rounded-sm bg-ink text-body-sm-strong text-on-primary">Log out</button>
+    </div>
+  </div>
+</header>
+
+<script>
+  import { getSession, logOut } from "../lib/store";
+
+  function reflectSession() {
+    const session = getSession();
+    const loggedIn = Boolean(session);
+    const dashboardHref = session?.activeRole === "giver" ? "/giver/dashboard" : "/finder/dashboard";
+
+    for (const el of document.querySelectorAll("#nav-logged-out, #nav-mobile-logged-out")) {
+      el.classList.toggle("hidden", loggedIn);
+    }
+    for (const el of document.querySelectorAll("#nav-logged-in")) {
+      el.classList.toggle("hidden", !loggedIn);
+      el.classList.toggle("flex", loggedIn);
+    }
+    for (const el of document.querySelectorAll("#nav-mobile-logged-in")) {
+      el.classList.toggle("hidden", !loggedIn);
+      el.classList.toggle("flex", loggedIn);
+    }
+    for (const el of document.querySelectorAll<HTMLAnchorElement>("#nav-dashboard-link, #nav-mobile-dashboard-link")) {
+      el.href = dashboardHref;
+    }
+  }
+
+  reflectSession();
+
+  for (const btn of document.querySelectorAll("#nav-logout, #nav-mobile-logout")) {
+    btn.addEventListener("click", () => {
+      logOut();
+      window.location.href = "/";
+    });
+  }
+
+  const toggle = document.getElementById("nav-mobile-toggle");
+  const panel = document.getElementById("nav-mobile-panel");
+  const menuIcon = document.getElementById("nav-menu-icon");
+  const closeIcon = document.getElementById("nav-close-icon");
+  toggle?.addEventListener("click", () => {
+    const isOpen = panel?.classList.contains("flex");
+    panel?.classList.toggle("hidden", isOpen);
+    panel?.classList.toggle("flex", !isOpen);
+    menuIcon?.classList.toggle("hidden", !isOpen);
+    closeIcon?.classList.toggle("hidden", isOpen);
+    toggle?.setAttribute("aria-expanded", String(!isOpen));
+    toggle?.setAttribute("aria-label", isOpen ? "Open menu" : "Close menu");
+  });
+</script>

@@ -1,0 +1,33 @@
+---
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Helper Jobs — find trusted daily-wage and household help, or find work near you." } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="description" content={description} />
+    <title>{title} · Helper Jobs</title>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <a href="#main" class="focus-ring sr-only rounded-sm bg-ink px-4 py-2 text-body-sm-strong text-on-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100]">
+      Skip to content
+    </a>
+    <Nav />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
