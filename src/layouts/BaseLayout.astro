@@ -14,6 +14,14 @@ const { title, description = "Helper Jobs — find trusted daily-wage and househ
 <!doctype html>
 <html lang="en">
   <head>
+    <script is:inline>
+      (function () {
+        var STORAGE_KEY = "hj-theme";
+        var stored = localStorage.getItem(STORAGE_KEY);
+        var isDark = stored ? stored === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.classList.toggle("dark", isDark);
+      })();
+    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

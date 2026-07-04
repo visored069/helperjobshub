@@ -26,18 +26,18 @@ import Button from "../components/Button.astro";
 </BaseLayout>
 
 <script>
-  import { logIn, getSession } from "../lib/store";
+  import { logIn } from "../lib/api-client";
 
   const form = document.getElementById("login-form") as HTMLFormElement;
   const errorEl = document.getElementById("login-error") as HTMLParagraphElement;
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const data = new FormData(form);
     const email = String(data.get("email") ?? "");
     const password = String(data.get("password") ?? "");
 
-    const result = logIn(email, password);
+    const result = await logIn(email, password);
     if (!result.ok) {
       errorEl.textContent = result.error;
       errorEl.classList.remove("hidden");
@@ -45,7 +45,6 @@ import Button from "../components/Button.astro";
       return;
     }
 
-    const session = getSession();
-    window.location.href = session?.activeRole ? `/${session.activeRole}/dashboard` : "/select-role";
+    window.location.href = result.session.activeRole ? `/${result.session.activeRole}/dashboard` : "/select-role";
   });
 </script>

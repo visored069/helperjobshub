@@ -44,17 +44,18 @@ import Button from "../../components/Button.astro";
 </BaseLayout>
 
 <script>
-  import { requireSession, getJobsPostedBy, getMockApplicantsForJob, getGiverProfile } from "../../lib/store";
+  import { requireSession, getJobsPostedBy, getApplicantsForJob, getGiverProfile } from "../../lib/api-client";
   import { getCategory } from "../../lib/categories";
 
-  const session = requireSession("giver");
+  const session = await requireSession("giver");
   if (session) {
     document.getElementById("greeting")!.textContent = `Welcome back, ${session.name.split(" ")[0]}`;
 
-    const jobs = getJobsPostedBy(session.email);
+    const jobs = await getJobsPostedBy();
     const active = jobs.filter((j) => j.status === "open").length;
-    const totalApplicants = jobs.reduce((sum, j) => sum + getMockApplicantsForJob(j.id).length, 0);
-    const profile = getGiverProfile();
+    const applicantLists = await Promise.all(jobs.map((j) => getApplicantsForJob(j.id)));
+    const totalApplicants = applicantLists.reduce((sum, list) => sum + list.length, 0);
+    const profile = await getGiverProfile();
 
     document.getElementById("stat-active")!.textContent = String(active);
     document.getElementById("stat-applicants")!.textContent = String(totalApplicants);

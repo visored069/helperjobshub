@@ -37,7 +37,7 @@ const payTypeOptions = [
 </BaseLayout>
 
 <script>
-  import { getJobs } from "../../../lib/store";
+  import { getJobs, getSession, getSavedJobIds } from "../../../lib/api-client";
   import { createJobCardElement } from "../../../lib/renderJobCard";
 
   const grid = document.getElementById("jobs-grid") as HTMLDivElement;
@@ -51,6 +51,11 @@ const payTypeOptions = [
   if (params.get("payType")) (form.elements.namedItem("payType") as HTMLSelectElement).value = params.get("payType")!;
   if (params.get("verifiedOnly")) (form.elements.namedItem("verifiedOnly") as HTMLInputElement).checked = true;
 
+  const session = await getSession();
+  const loggedIn = Boolean(session);
+  const savedJobIds = new Set(loggedIn ? await getSavedJobIds() : []);
+  const allJobs = await getJobs();
+
   function render() {
     const data = new FormData(form);
     const category = String(data.get("category") ?? "");
@@ -58,7 +63,7 @@ const payTypeOptions = [
     const payType = String(data.get("payType") ?? "");
     const verifiedOnly = data.get("verifiedOnly") === "on";
 
-    const jobs = getJobs().filter((job) => {
+    const jobs = allJobs.filter((job) => {
       if (job.status !== "open") return false;
       if (category && job.categoryId !== category) return false;
       if (payType && job.payType !== payType) return false;
@@ -69,7 +74,7 @@ const payTypeOptions = [
 
     grid.innerHTML = "";
     for (const job of jobs) {
-      grid.appendChild(createJobCardElement(job, { href: `/finder/jobs/view?id=${job.id}` }));
+      grid.appendChild(createJobCardElement(job, { href: `/finder/jobs/view?id=${job.id}`, savedJobIds, loggedIn }));
     }
     emptyState.classList.toggle("hidden", jobs.length > 0);
     resultsCount.textContent = `${jobs.length} job${jobs.length === 1 ? "" : "s"} found`;

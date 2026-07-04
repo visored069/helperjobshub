@@ -1,0 +1,37 @@
+---
+import { Sun, Moon } from "lucide-astro";
+---
+
+<button
+  type="button"
+  id="theme-toggle"
+  class="focus-ring grid h-9 w-9 shrink-0 place-items-center rounded-sm text-ink hover:bg-canvas-soft-2"
+  aria-label="Toggle dark mode"
+>
+  <Sun size={18} id="theme-toggle-sun" aria-hidden="true" />
+  <Moon size={18} id="theme-toggle-moon" class="hidden" aria-hidden="true" />
+</button>
+
+<script>
+  const STORAGE_KEY = "hj-theme";
+  const root = document.documentElement;
+  const button = document.getElementById("theme-toggle");
+  const sunIcon = document.getElementById("theme-toggle-sun");
+  const moonIcon = document.getElementById("theme-toggle-moon");
+
+  function reflect() {
+    const isDark = root.classList.contains("dark");
+    sunIcon?.classList.toggle("hidden", isDark);
+    moonIcon?.classList.toggle("hidden", !isDark);
+    button?.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
+  }
+
+  reflect();
+
+  button?.addEventListener("click", () => {
+    const next = root.classList.contains("dark") ? "light" : "dark";
+    root.classList.toggle("dark", next === "dark");
+    localStorage.setItem(STORAGE_KEY, next);
+    reflect();
+  });
+</script>

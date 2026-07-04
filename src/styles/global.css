@@ -19,6 +19,7 @@
   --color-on-primary: #ffffff;
   --color-body: #4d4d4d;
   --color-mute: #888888;
+  --color-ink-hover: #262626;
   --color-hairline: #ebebeb;
   --color-hairline-strong: #a1a1a1;
   --color-canvas: #ffffff;
@@ -104,17 +105,68 @@
   --shadow-modal: 0px 1px 1px rgba(0, 0, 0, 0.02), 0px 8px 16px -4px rgba(0, 0, 0, 0.04), 0px 24px 32px -8px rgba(0, 0, 0, 0.06), inset 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
+/*
+  Dark theme: re-declares the same custom properties Tailwind generated
+  utilities already reference (e.g. .text-ink { color: var(--color-ink) }),
+  scoped to :root.dark. Class beats bare :root on specificity, so this wins
+  regardless of source order relative to the @theme block above.
+*/
+:root.dark {
+  color-scheme: dark;
+
+  --color-ink: #ededed;
+  --color-on-primary: #0a0a0a;
+  --color-ink-hover: #d4d4d4;
+  --color-body: #a1a1a1;
+  --color-mute: #767676;
+  --color-hairline: #2e2e2e;
+  --color-hairline-strong: #4d4d4d;
+  --color-canvas: #0a0a0a;
+  --color-canvas-soft: #111111;
+  --color-canvas-soft-2: #1a1a1a;
+
+  --color-link: #3291ff;
+  --color-link-deep: #52a8ff;
+  --color-link-bg-soft: #10233d;
+
+  --color-success: #3291ff;
+  --color-error: #f76e6e;
+  --color-error-soft: #3a1315;
+  --color-error-deep: #ffb3b3;
+  --color-warning: #f7b955;
+  --color-warning-soft: #3a2b0d;
+  --color-warning-deep: #ffd280;
+
+  --color-violet: #9a63e0;
+  --color-violet-soft: #2c1f45;
+  --color-violet-deep: #c7a6f5;
+  --color-cyan: #50e3c2;
+  --color-cyan-soft: #123a33;
+  --color-cyan-deep: #7dffdf;
+  --color-highlight-pink: #ff4db8;
+  --color-highlight-magenta: #ff6b9d;
+
+  --shadow-card: 0px 1px 1px rgba(0, 0, 0, 0.3), 0px 2px 2px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+  --shadow-card-lg: 0px 2px 2px rgba(0, 0, 0, 0.4), 0px 8px 16px -4px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+  --shadow-modal: 0px 1px 1px rgba(0, 0, 0, 0.4), 0px 8px 16px -4px rgba(0, 0, 0, 0.4), 0px 24px 32px -8px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+}
+
 @layer base {
+  html {
+    color-scheme: light;
+  }
+
   body {
     background-color: var(--color-canvas-soft);
     color: var(--color-ink);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    transition: background-color 150ms ease, color 150ms ease;
   }
 
   ::selection {
     background-color: var(--color-ink);
-    color: #f2f2f2;
+    color: var(--color-canvas);
   }
 
   a,

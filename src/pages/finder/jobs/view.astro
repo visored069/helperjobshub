@@ -59,12 +59,12 @@ import { ShieldAlert } from "lucide-astro";
 </BaseLayout>
 
 <script>
-  import { getJob, getSession, applyToJob, hasApplied } from "../../../lib/store";
+  import { getJob, getSession, applyToJob, hasApplied } from "../../../lib/api-client";
   import { getCategory } from "../../../lib/categories";
 
   const params = new URLSearchParams(window.location.search);
   const jobId = params.get("id") ?? "";
-  const job = jobId ? getJob(jobId) : undefined;
+  const job = jobId ? await getJob(jobId) : undefined;
 
   const detailEl = document.getElementById("job-detail") as HTMLDivElement;
   const notFoundEl = document.getElementById("not-found") as HTMLDivElement;
@@ -83,30 +83,30 @@ import { ShieldAlert } from "lucide-astro";
     document.getElementById("job-pay")!.textContent = job.payAmount;
     document.getElementById("job-frequency")!.textContent = job.frequency.replace("-", " ");
     document.getElementById("job-location")!.textContent = job.location;
-    document.getElementById("job-postedby")!.textContent = job.postedBy;
+    document.getElementById("job-postedby")!.textContent = job.postedByName;
 
     const applyBtn = document.getElementById("apply-btn") as HTMLButtonElement;
     const applyStatus = document.getElementById("apply-status") as HTMLParagraphElement;
 
-    function reflectApplyState() {
-      const session = getSession();
-      if (session && hasApplied(job!.id, session.email)) {
+    async function reflectApplyState() {
+      const session = await getSession();
+      if (session && (await hasApplied(job!.id))) {
         applyBtn.textContent = "Applied";
         applyBtn.setAttribute("disabled", "true");
         applyBtn.classList.add("opacity-60", "pointer-events-none");
         applyStatus.textContent = "You've already applied to this job — track it from your Applications page.";
       }
     }
-    reflectApplyState();
+    await reflectApplyState();
 
-    applyBtn.addEventListener("click", () => {
-      const session = getSession();
+    applyBtn.addEventListener("click", async () => {
+      const session = await getSession();
       if (!session) {
         window.location.href = `/login?next=/finder/jobs/view?id=${job!.id}`;
         return;
       }
-      applyToJob(job!.id, session.email);
-      reflectApplyState();
+      await applyToJob(job!.id);
+      await reflectApplyState();
     });
   }
 </script>

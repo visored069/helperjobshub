@@ -28,12 +28,12 @@ import Button from "../components/Button.astro";
 </BaseLayout>
 
 <script>
-  import { signUp } from "../lib/store";
+  import { signUp } from "../lib/api-client";
 
   const form = document.getElementById("signup-form") as HTMLFormElement;
   const errorEl = document.getElementById("signup-error") as HTMLParagraphElement;
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const data = new FormData(form);
     const name = String(data.get("name") ?? "");
@@ -47,7 +47,7 @@ import Button from "../components/Button.astro";
       return;
     }
 
-    const result = signUp(name, email, password);
+    const result = await signUp(name, email, password);
     if (!result.ok) {
       errorEl.textContent = result.error;
       errorEl.classList.remove("hidden");

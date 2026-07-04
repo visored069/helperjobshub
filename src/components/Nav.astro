@@ -1,5 +1,6 @@
 ---
 import { Menu, X } from "lucide-astro";
+import ThemeToggle from "./ThemeToggle.astro";
 ---
 
 <header class="sticky top-0 z-50 h-16 border-b border-hairline bg-canvas/95 backdrop-blur">
@@ -15,22 +16,26 @@ import { Menu, X } from "lucide-astro";
       <a href="/safety" class="focus-ring rounded-full px-3 py-1.5 text-body-sm text-body transition-colors hover:bg-canvas-soft-2 hover:text-ink">Safety</a>
     </nav>
 
-    <div class="hidden items-center gap-2 md:flex" id="nav-auth-area">
-      <div id="nav-logged-out" class="flex items-center gap-2">
-        <a href="/login" class="focus-ring flex h-7 items-center rounded-sm px-2 text-body-sm-strong text-ink hover:bg-canvas-soft-2">Log in</a>
-        <a href="/signup" class="focus-ring flex h-7 items-center rounded-sm bg-ink px-2 text-body-sm-strong text-on-primary hover:bg-neutral-800">Sign up</a>
+    <div class="flex items-center gap-1">
+      <div class="hidden items-center gap-2 md:flex" id="nav-auth-area">
+        <div id="nav-logged-out" class="flex items-center gap-2">
+          <a href="/login" class="focus-ring flex h-7 items-center rounded-sm px-2 text-body-sm-strong text-ink hover:bg-canvas-soft-2">Log in</a>
+          <a href="/signup" class="focus-ring flex h-7 items-center rounded-sm bg-ink px-2 text-body-sm-strong text-on-primary hover:bg-ink-hover">Sign up</a>
+        </div>
+        <div id="nav-logged-in" class="hidden items-center gap-3">
+          <a href="/select-role" class="focus-ring rounded-full px-2 text-body-sm text-body hover:text-ink">Switch role</a>
+          <a href="/finder/dashboard" id="nav-dashboard-link" class="focus-ring flex h-7 items-center rounded-sm border border-hairline px-2 text-body-sm-strong text-ink hover:bg-canvas-soft-2">Dashboard</a>
+          <button type="button" id="nav-logout" class="focus-ring flex h-7 items-center rounded-sm bg-ink px-2 text-body-sm-strong text-on-primary hover:bg-ink-hover">Log out</button>
+        </div>
       </div>
-      <div id="nav-logged-in" class="hidden items-center gap-3">
-        <a href="/select-role" class="focus-ring rounded-full px-2 text-body-sm text-body hover:text-ink">Switch role</a>
-        <a href="/finder/dashboard" id="nav-dashboard-link" class="focus-ring flex h-7 items-center rounded-sm border border-hairline px-2 text-body-sm-strong text-ink hover:bg-canvas-soft-2">Dashboard</a>
-        <button type="button" id="nav-logout" class="focus-ring flex h-7 items-center rounded-sm bg-ink px-2 text-body-sm-strong text-on-primary hover:bg-neutral-800">Log out</button>
-      </div>
-    </div>
 
-    <button type="button" id="nav-mobile-toggle" class="focus-ring grid h-9 w-9 place-items-center rounded-sm text-ink md:hidden" aria-label="Open menu" aria-expanded="false" aria-controls="nav-mobile-panel">
-      <Menu size={20} id="nav-menu-icon" aria-hidden="true" />
-      <X size={20} id="nav-close-icon" class="hidden" aria-hidden="true" />
-    </button>
+      <ThemeToggle />
+
+      <button type="button" id="nav-mobile-toggle" class="focus-ring grid h-9 w-9 place-items-center rounded-sm text-ink md:hidden" aria-label="Open menu" aria-expanded="false" aria-controls="nav-mobile-panel">
+        <Menu size={20} id="nav-menu-icon" aria-hidden="true" />
+        <X size={20} id="nav-close-icon" class="hidden" aria-hidden="true" />
+      </button>
+    </div>
   </div>
 
   <div id="nav-mobile-panel" class="hidden flex-col gap-1 border-b border-hairline bg-canvas px-4 py-3 md:hidden">
@@ -51,10 +56,10 @@ import { Menu, X } from "lucide-astro";
 </header>
 
 <script>
-  import { getSession, logOut } from "../lib/store";
+  import { getSession, logOut } from "../lib/api-client";
 
-  function reflectSession() {
-    const session = getSession();
+  async function reflectSession() {
+    const session = await getSession();
     const loggedIn = Boolean(session);
     const dashboardHref = session?.activeRole === "giver" ? "/giver/dashboard" : "/finder/dashboard";
 
@@ -77,8 +82,8 @@ import { Menu, X } from "lucide-astro";
   reflectSession();
 
   for (const btn of document.querySelectorAll("#nav-logout, #nav-mobile-logout")) {
-    btn.addEventListener("click", () => {
-      logOut();
+    btn.addEventListener("click", async () => {
+      await logOut();
       window.location.href = "/";
     });
   }

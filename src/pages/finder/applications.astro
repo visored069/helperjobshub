@@ -15,11 +15,11 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 </BaseLayout>
 
 <script>
-  import { requireSession, getMyApplications, getJob } from "../../lib/store";
+  import { requireSession, getMyApplications, getJob } from "../../lib/api-client";
 
-  const session = requireSession("finder");
+  const session = await requireSession("finder");
   if (session) {
-    const applications = getMyApplications(session.email);
+    const applications = await getMyApplications();
     const list = document.getElementById("applications-list") as HTMLDivElement;
 
     if (applications.length === 0) {
@@ -33,7 +33,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
         closed: "bg-canvas-soft text-mute",
       };
       for (const app of applications) {
-        const job = getJob(app.jobId);
+        const job = await getJob(app.jobId);
         const row = document.createElement("a");
         row.href = job ? `/finder/jobs/view?id=${job.id}` : "#";
         row.className = "flex items-center justify-between gap-4 rounded-md border border-hairline bg-canvas p-4 hover:border-hairline-strong";

@@ -57,7 +57,7 @@ const differentiators = [
       </p>
       <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
         <Button href="/signup" variant="primary" class="w-full sm:w-auto">I need help</Button>
-        <Button href="/signup" variant="secondary" class="w-full sm:w-auto">I want to work</Button>
+        <Button href="/signup" variant="primary" class="w-full sm:w-auto">I want to work</Button>
       </div>
       <div class="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
         {trustPoints.map(({ icon: Icon, label }) => (
@@ -122,8 +122,8 @@ const differentiators = [
     </div>
   </section>
 
-  <!-- Differentiators (polarity-flipped dark band) -->
-  <section class="bg-ink px-4 py-16 text-on-primary md:px-6 md:py-24">
+  <!-- Differentiators (fixed dark band, independent of light/dark theme) -->
+  <section class="bg-neutral-900 px-4 py-16 text-white md:px-6 md:py-24">
     <div class="mx-auto max-w-[1400px]">
       <div class="mx-auto max-w-[640px] text-center">
         <h2 class="text-display-lg">Built differently from classifieds and corporate job boards</h2>

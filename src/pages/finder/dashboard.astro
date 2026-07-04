@@ -14,7 +14,7 @@ import Card from "../../components/Card.astro";
         <span class="text-body-sm-strong text-ink">Available now</span>
         <span class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-hairline-strong transition-colors has-[:checked]:bg-ink">
           <input type="checkbox" id="available-toggle" class="peer sr-only" />
-          <span class="inline-block h-4 w-4 translate-x-1 rounded-full bg-white transition-transform peer-checked:translate-x-6"></span>
+          <span class="inline-block h-4 w-4 translate-x-1 rounded-full bg-canvas transition-transform peer-checked:translate-x-6"></span>
         </span>
       </label>
     </div>
@@ -61,14 +61,14 @@ import Card from "../../components/Card.astro";
 </BaseLayout>
 
 <script>
-  import { requireSession, getJobs, getWorkerProfile, saveWorkerProfile, getMyApplications, getSavedJobIds } from "../../lib/store";
+  import { requireSession, getJobs, getWorkerProfile, saveWorkerProfile, getMyApplications, getSavedJobIds } from "../../lib/api-client";
   import { createJobCardElement } from "../../lib/renderJobCard";
 
-  const session = requireSession("finder");
+  const session = await requireSession("finder");
   if (session) {
     document.getElementById("greeting")!.textContent = `Welcome back, ${session.name.split(" ")[0]}`;
 
-    const profile = getWorkerProfile();
+    const profile = await getWorkerProfile();
     const toggle = document.getElementById("available-toggle") as HTMLInputElement;
     toggle.checked = profile.availableNow;
     toggle.addEventListener("change", () => {
@@ -81,7 +81,7 @@ import Card from "../../components/Card.astro";
     document.getElementById("completeness-pct")!.textContent = `${pct}%`;
     (document.getElementById("completeness-bar") as HTMLDivElement).style.width = `${pct}%`;
 
-    const jobs = getJobs().filter((j) => j.status === "open");
+    const jobs = (await getJobs()).filter((j) => j.status === "open");
     const recommended = profile.skills.length > 0 ? jobs.filter((j) => profile.skills.includes(j.categoryId)) : jobs.slice(0, 4);
     const recommendedGrid = document.getElementById("recommended-grid") as HTMLDivElement;
     if (recommended.length === 0) {
@@ -92,11 +92,11 @@ import Card from "../../components/Card.astro";
       }
     }
 
-    const applications = getMyApplications(session.email);
+    const applications = await getMyApplications();
     document.getElementById("applications-summary")!.textContent =
       applications.length === 0 ? "You haven't applied to any jobs yet." : `${applications.length} application${applications.length === 1 ? "" : "s"} in progress.`;
 
-    const savedCount = getSavedJobIds().length;
+    const savedCount = (await getSavedJobIds()).length;
     document.getElementById("saved-summary")!.textContent =
       savedCount === 0 ? "You haven't saved any jobs yet." : `${savedCount} job${savedCount === 1 ? "" : "s"} saved.`;
   }

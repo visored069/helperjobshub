@@ -31,15 +31,15 @@ import { HardHat, Search } from "lucide-astro";
 </BaseLayout>
 
 <script>
-  import { requireSession, setActiveRole } from "../lib/store";
+  import { requireSession, setActiveRole } from "../lib/api-client";
   import type { Role } from "../lib/types";
 
   requireSession();
 
   for (const btn of document.querySelectorAll<HTMLButtonElement>("[data-role]")) {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", async () => {
       const role = btn.dataset.role as Role;
-      setActiveRole(role);
+      await setActiveRole(role);
       window.location.href = `/${role}/dashboard`;
     });
   }

@@ -14,15 +14,15 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 </BaseLayout>
 
 <script>
-  import { requireSession, getJob, getMockApplicantsForJob, getApplicantDecision, setApplicantDecision } from "../../../lib/store";
+  import { requireSession, getJob, getApplicantsForJob, setApplicationStatus } from "../../../lib/api-client";
   import { getCategory } from "../../../lib/categories";
-  import type { ApplicantDecision } from "../../../lib/store";
+  import type { ApplicationStatus } from "../../../lib/types";
 
-  const session = requireSession("giver");
+  const session = await requireSession("giver");
   if (session) {
     const params = new URLSearchParams(window.location.search);
     const jobId = params.get("id") ?? "";
-    const job = jobId ? getJob(jobId) : undefined;
+    const job = jobId ? await getJob(jobId) : undefined;
 
     if (!job) {
       document.getElementById("not-found")!.classList.remove("hidden");
@@ -32,7 +32,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
       document.getElementById("job-meta")!.textContent = `${category?.label ?? ""} · ${job.location}`;
 
       const list = document.getElementById("applicants-list") as HTMLDivElement;
-      const applicants = getMockApplicantsForJob(job.id);
+      const applicants = await getApplicantsForJob(job.id);
 
       const verificationLabel = { unverified: "Unverified", phone: "Phone Verified", id: "ID Verified" };
       const verificationTone = { unverified: "bg-warning-soft text-warning-deep", phone: "bg-canvas-soft text-body", id: "bg-link-bg-soft text-link-deep" };
@@ -65,17 +65,17 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
         const decisionLabel = document.createElement("span");
         decisionLabel.className = "text-body-sm text-body";
 
-        function refreshLabel(decision: ApplicantDecision) {
+        function refreshLabel(status: ApplicationStatus) {
           decisionLabel.textContent =
-            decision === "shortlisted" ? "Shortlisted" : decision === "declined" ? "Declined" : "No decision yet";
+            status === "shortlisted" ? "Shortlisted" : status === "declined" ? "Declined" : status === "hired" ? "Hired" : "No decision yet";
         }
 
         const shortlistBtn = document.createElement("button");
         shortlistBtn.type = "button";
-        shortlistBtn.className = "focus-ring rounded-sm bg-ink px-3 py-1.5 text-body-sm-strong text-on-primary hover:bg-neutral-800";
+        shortlistBtn.className = "focus-ring rounded-sm bg-ink px-3 py-1.5 text-body-sm-strong text-on-primary hover:bg-ink-hover";
         shortlistBtn.textContent = "Shortlist";
-        shortlistBtn.addEventListener("click", () => {
-          setApplicantDecision(job!.id, applicant.name, "shortlisted");
+        shortlistBtn.addEventListener("click", async () => {
+          await setApplicationStatus(applicant.applicationId, "shortlisted");
           refreshLabel("shortlisted");
         });
 
@@ -83,12 +83,12 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
         declineBtn.type = "button";
         declineBtn.className = "focus-ring rounded-sm border border-hairline px-3 py-1.5 text-body-sm text-ink hover:bg-canvas-soft-2";
         declineBtn.textContent = "Decline";
-        declineBtn.addEventListener("click", () => {
-          setApplicantDecision(job!.id, applicant.name, "declined");
+        declineBtn.addEventListener("click", async () => {
+          await setApplicationStatus(applicant.applicationId, "declined");
           refreshLabel("declined");
         });
 
-        refreshLabel(getApplicantDecision(job.id, applicant.name));
+        refreshLabel(applicant.status);
 
         actions.append(shortlistBtn, declineBtn, decisionLabel);
         card.append(top, actions);

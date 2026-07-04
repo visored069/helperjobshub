@@ -32,17 +32,29 @@ export interface Job {
   urgent: boolean;
   verifiedOnly: boolean;
   postedBy: string;
+  postedByName: string;
   postedAt: string;
   status: JobStatus;
-  seed?: boolean;
 }
 
-export type ApplicationStatus = "applied" | "viewed" | "shortlisted" | "hired" | "closed";
+export type ApplicationStatus = "applied" | "viewed" | "shortlisted" | "declined" | "hired" | "closed";
 
 export interface Application {
   id: string;
   jobId: string;
   applicantName: string;
+  appliedAt: string;
+  status: ApplicationStatus;
+}
+
+export interface ApplicantView {
+  applicationId: string;
+  name: string;
+  email: string;
+  experienceYears: number;
+  rating: number;
+  ratingCount: number;
+  verification: VerificationLevel;
   appliedAt: string;
   status: ApplicationStatus;
 }

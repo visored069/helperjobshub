@@ -1,5 +1,5 @@
 import { getCategory } from "./categories";
-import { isJobSaved, toggleSavedJob } from "./store";
+import { toggleSavedJob } from "./api-client";
 import type { Job } from "./types";
 
 const mapPinSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-mute shrink-0" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`;
@@ -11,8 +11,11 @@ const bookmarkSvg = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
  * Astro component. This is the single template all finder-facing listing
  * pages (browse, dashboard) render from.
  */
-export function createJobCardElement(job: Job, opts: { href: string; showSave?: boolean }): HTMLElement {
-  const { href, showSave = true } = opts;
+export function createJobCardElement(
+  job: Job,
+  opts: { href: string; showSave?: boolean; savedJobIds?: Set<string>; loggedIn?: boolean }
+): HTMLElement {
+  const { href, showSave = true, savedJobIds, loggedIn = false } = opts;
   const category = getCategory(job.categoryId);
 
   const article = document.createElement("article");
@@ -64,7 +67,7 @@ export function createJobCardElement(job: Job, opts: { href: string; showSave?: 
   bottomRow.className = "mt-1 flex items-center justify-between border-t border-hairline pt-3";
   const postedBy = document.createElement("span");
   postedBy.className = "text-caption text-mute";
-  postedBy.textContent = `Posted by ${job.postedBy}`;
+  postedBy.textContent = `Posted by ${job.postedByName}`;
   bottomRow.appendChild(postedBy);
 
   if (showSave) {
@@ -73,11 +76,17 @@ export function createJobCardElement(job: Job, opts: { href: string; showSave?: 
     saveBtn.setAttribute("aria-label", "Save job");
     saveBtn.className = "focus-ring rounded-full p-1.5 text-mute hover:bg-canvas-soft-2 hover:text-ink";
     saveBtn.innerHTML = bookmarkSvg;
-    const reflectSaved = () => saveBtn.classList.toggle("text-ink", isJobSaved(job.id));
+    const reflectSaved = () => saveBtn.classList.toggle("text-ink", savedJobIds?.has(job.id) ?? false);
     reflectSaved();
-    saveBtn.addEventListener("click", (e) => {
+    saveBtn.addEventListener("click", async (e) => {
       e.preventDefault();
-      toggleSavedJob(job.id);
+      if (!loggedIn) {
+        window.location.href = "/login";
+        return;
+      }
+      const saved = await toggleSavedJob(job.id);
+      if (saved) savedJobIds?.add(job.id);
+      else savedJobIds?.delete(job.id);
       reflectSaved();
     });
     bottomRow.appendChild(saveBtn);

@@ -1,6 +1,9 @@
 # build output
 dist/
 
+# local sqlite database
+data/
+
 # generated types
 .astro/
 

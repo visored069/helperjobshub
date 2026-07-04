@@ -30,11 +30,11 @@ import Button from "../../components/Button.astro";
 </BaseLayout>
 
 <script>
-  import { requireSession, getGiverProfile, saveGiverProfile } from "../../lib/store";
+  import { requireSession, getGiverProfile, saveGiverProfile } from "../../lib/api-client";
 
-  const session = requireSession("giver");
+  const session = await requireSession("giver");
   if (session) {
-    const profile = getGiverProfile();
+    const profile = await getGiverProfile();
     const form = document.getElementById("profile-form") as HTMLFormElement;
     const badge = document.getElementById("verification-badge") as HTMLSpanElement;
     const ratingText = document.getElementById("rating-text") as HTMLSpanElement;
@@ -62,10 +62,10 @@ import Button from "../../components/Button.astro";
       reflectVerification();
     });
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const data = new FormData(form);
-      saveGiverProfile({ ...profile, name: session.name, location: String(data.get("location") ?? "") });
+      await saveGiverProfile({ ...profile, name: session.name, location: String(data.get("location") ?? "") });
       document.getElementById("profile-saved")!.classList.remove("hidden");
     });
   }

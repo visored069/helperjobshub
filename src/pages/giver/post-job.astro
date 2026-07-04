@@ -55,11 +55,11 @@ const frequencyOptions = [
 </BaseLayout>
 
 <script>
-  import { requireSession, saveJob } from "../../lib/store";
+  import { requireSession, saveJob } from "../../lib/api-client";
   import { getCategory } from "../../lib/categories";
   import type { Frequency, PayType } from "../../lib/types";
 
-  const session = requireSession("giver");
+  const session = await requireSession("giver");
   if (session) {
     const form = document.getElementById("post-job-form") as HTMLFormElement;
     const categorySelect = form.elements.namedItem("categoryId") as HTMLSelectElement;
@@ -75,10 +75,10 @@ const frequencyOptions = [
       }
     });
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const data = new FormData(form);
-      const job = saveJob({
+      const job = await saveJob({
         title: String(data.get("title") ?? ""),
         categoryId: String(data.get("categoryId") ?? ""),
         description: String(data.get("description") ?? ""),
@@ -88,7 +88,6 @@ const frequencyOptions = [
         frequency: data.get("frequency") as Frequency,
         urgent: data.get("urgent") === "on",
         verifiedOnly: data.get("verifiedOnly") === "on",
-        postedBy: session.email,
       });
       window.location.href = `/giver/jobs?posted=${job.id}`;
     });
