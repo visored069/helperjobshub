@@ -1,9 +1,8 @@
 import { DatabaseSync } from "node:sqlite";
-import { fileURLToPath } from "node:url";
 import { mkdirSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { resolve } from "node:path";
 
-const dataDir = resolve(fileURLToPath(new URL("../../data/", import.meta.url)));
+const dataDir = resolve(process.env.DATA_DIR ?? "data");
 mkdirSync(dataDir, { recursive: true });
 
 const dbPath = resolve(dataDir, "app.db");
