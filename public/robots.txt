@@ -9,4 +9,4 @@ Disallow: /giver/dashboard
 Disallow: /giver/profile
 Disallow: /giver/jobs
 
-Sitemap: https://helperjobshub.com/sitemap.xml
+Sitemap: https://helperjobshub.onrender.com/sitemap.xml
